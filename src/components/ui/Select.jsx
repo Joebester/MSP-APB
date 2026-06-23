@@ -22,11 +22,16 @@ export function Select({
           {...props}
         >
           <option value="">{placeholder}</option>
-          {options.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
+          {options.map((option) => {
+            const isObject = typeof option === 'object' && option !== null;
+            const val = isObject ? option.value : option;
+            const label = isObject ? option.label : option;
+            return (
+              <option key={String(val)} value={String(val)}>
+                {label}
+              </option>
+            );
+          })}
         </select>
         <ChevronDown
           className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500"

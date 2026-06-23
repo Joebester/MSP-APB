@@ -1,6 +1,7 @@
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useMemo, useState, useCallback } from 'react';
 
 const defaultState = {
+  profileId: '',
   country: 'laos',
   phone: '',
   otp: '',
@@ -13,6 +14,16 @@ const defaultState = {
   district: '',
   province: '',
   village: '',
+  kycMethod: '',
+  documentType: 'passport',
+  documentNumber: '',
+  documentIssueDate: '',
+  documentExpirationDate: '',
+  documentPhotoTaken: false,
+  selfiePhotoTaken: false,
+  videoShortTaken: false,
+  securityAnswers: ['', '', ''],
+  customerCode: 'US00001234638',
   pin: '',
   termsAccepted: false,
   confirmTermsAccepted: false,
@@ -23,9 +34,9 @@ const RegistrationContext = createContext(null);
 export function RegistrationProvider({ children }) {
   const [data, setData] = useState(defaultState);
 
-  const updateData = (updates) => {
+  const updateData = useCallback((updates) => {
     setData((prev) => ({ ...prev, ...updates }));
-  };
+  }, []);
 
   const fullName = useMemo(() => {
     const parts = [data.title, data.firstName, data.lastName].filter(Boolean);

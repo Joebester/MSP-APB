@@ -1,8 +1,8 @@
 export const REGISTRATION_STEPS = [
   { number: 1, label: 'Verify' },
   { number: 2, label: 'General Details' },
-  { number: 3, label: 'Set PIN' },
-  { number: 4, label: 'Confirm' },
+  { number: 3, label: 'Documents Upload' },
+  { number: 4, label: 'Confirm & Submit' },
 ];
 
 export const TITLE_OPTIONS = ['Mr', 'Mrs', 'Ms', 'Miss'];
@@ -36,6 +36,72 @@ export const DISTRICTS = [
   'Savannakhet',
   'Thakhek',
   'Vientiane',
+];
+
+export const DOCUMENT_TYPES = {
+  passport: {
+    label: 'Passport',
+    fields: [
+      {
+        key: 'documentNumber',
+        label: 'Passport Number',
+        placeholder: 'Enter your Passport Number',
+        required: true,
+      },
+      {
+        key: 'documentIssueDate',
+        label: 'Passport issue date',
+        placeholder: 'Enter your Passport issue date',
+        required: true,
+      },
+      {
+        key: 'documentExpirationDate',
+        label: 'Passport expiration date',
+        placeholder: 'Enter your Passport expiration date',
+        required: true,
+      },
+    ],
+  },
+  id_card: {
+    label: 'ID Card',
+    fields: [
+      {
+        key: 'documentNumber',
+        label: 'Enter ID Card Number',
+        placeholder: 'Enter your Passport Number',
+        required: true,
+      },
+      {
+        key: 'documentExpirationDate',
+        label: 'ID Card expiration date',
+        placeholder: 'Enter your Passport issue date',
+        required: false,
+      },
+    ],
+  },
+  census: {
+    label: 'Census Number',
+    fields: [
+      {
+        key: 'documentNumber',
+        label: 'Enter Census Number',
+        placeholder: 'Enter your Passport Number',
+        required: true,
+      },
+      {
+        key: 'documentIssueDate',
+        label: 'Census Number issue date',
+        placeholder: 'Enter your Passport issue date',
+        required: true,
+      },
+    ],
+  },
+};
+
+export const SECURITY_QUESTIONS = [
+  'What is your Last name?',
+  'What is your brother name?',
+  'What is your first school?',
 ];
 
 export const TERMS_TEXT = `Section 1.10.32 of "de Finibus Bonorum et Malorum", written by Cicero in 45 BC.

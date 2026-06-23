@@ -16,7 +16,7 @@ import toast from 'react-hot-toast';
 export default function VerifyStep() {
   const navigate = useNavigate();
   const { data, updateData } = useRegistration();
-  const { sending, sendError, sendSuccess, sendOtp, countdown, verifying, verifyError, verifyOtp } = useVerifyStore();
+  const { sending, sendError, sendSuccess, sendOtp,sendEmailOtp, countdown, verifying, verifyError, verifyOtp, verifyEmailOtp } = useVerifyStore();
   const isLaos = data.country === 'laos';
 
   const canProceed = isLaos
@@ -90,7 +90,30 @@ export default function VerifyStep() {
                     onChange={(e) => updateData({ email: e.target.value })}
                     className="flex-1"
                   />
-                  <Button className="shrink-0 self-end px-5"><Trans>Send</Trans></Button>
+                  <Button
+                    className="shrink-0 self-end px-5"
+                    onClick={() => sendEmailOtp(data.email.trim())}
+                    disabled={!data.email.trim() || sending || countdown > 0}
+                  >
+                    {sending ? (
+                      <Trans>Sending…</Trans>
+                    ) : countdown > 0 ? (
+                      `${countdown}s`
+                    ) : (
+                      <Trans>Send</Trans>
+                    )}
+                  </Button>
+                  {sendError && (
+                    <p className="mt-1.5 text-xs text-red-500">
+                      {sendError}
+                    </p>
+                  )}
+
+                  {sendSuccess && !sendError && (
+                    <p className="mt-1.5 text-xs text-green-600">
+                      <Trans>Email OTP sent successfully</Trans>
+                    </p>
+                  )}
                 </div>
               </div>
               <Input
@@ -109,11 +132,25 @@ export default function VerifyStep() {
         <StepFooter
           onBack={() => navigate('/register/policy?lang=' + localStorage.getItem("lang"))}
           onNext={async () => {
-            const ok = await verifyOtp(
-              isLaos ? data.phone.trim() : data.email.trim(),
-              isLaos ? data.otp.trim() : data.emailOtp.trim(),
-            );
-            if (ok) navigate('/register/details?lang=' + localStorage.getItem("lang"));
+            const result = isLaos
+              ? await verifyOtp(
+                data.phone.trim(),
+                data.otp.trim()
+              )
+              : await verifyEmailOtp(
+                data.email.trim(),
+                data.emailOtp.trim()
+              );
+
+            if (result) {
+              if (result.profileId) {
+                updateData({ profileId: result.profileId });
+              }
+              navigate(
+                '/register/details?lang=' +
+                localStorage.getItem("lang")
+              );
+            }
           }}
           nextDisabled={!canProceed || verifying}
           nextLabel={verifying ? <Trans>Verifying…</Trans> : <Trans>Next</Trans>}

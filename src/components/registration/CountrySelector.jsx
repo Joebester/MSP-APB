@@ -9,7 +9,7 @@ export function CountrySelector({ value, onChange }) {
   return (
     <div className="space-y-3">
       <p className="text-center text-sm font-medium text-gray-700">
-        <Trans>The country where you live permanently</Trans>
+        <Trans>The country where you live permanently</Trans>''
       </p>
       <div className="grid grid-cols-2 gap-3">
         {options.map((option) => {

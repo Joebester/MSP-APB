@@ -7,6 +7,11 @@ import SetPinStep from '../pages/registration/SetPinStep';
 import PolicyPage from '../pages/registration/PolicyPage';
 import TermsPage from '../pages/registration/TermsPage';
 import VerifyStep from '../pages/registration/VerifyStep';
+import ConfirmSubmitStep from '../pages/registration/ConfirmSubmitStep';
+import DocumentsUploadStep from '../pages/registration/DocumentsUploadStep';
+import KycStep from '../pages/registration/KycStep';
+import SecurityQuestionsStep from '../pages/registration/SecurityQuestionsStep';
+import KycMepormStep from '../pages/registration/KycMepormStep';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 
@@ -38,9 +43,14 @@ export function AppRoutes() {
       <Route path="/register/policy" element={<PolicyPage />} />
       <Route path="/register/verify" element={<VerifyStep />} />
       <Route path="/register/details" element={<GeneralDetailsStep />} />
+      <Route path="/register/kyc" element={<KycStep />} />
+      <Route path="/register/kyc/meporm" element={<KycMepormStep />} />
+      <Route path="/register/documents" element={<DocumentsUploadStep />} />
       <Route path="/register/pin" element={<SetPinStep />} />
+      <Route path="/register/security-questions" element={<SecurityQuestionsStep />} />
       <Route path="/register/terms" element={<TermsPage />} />
       <Route path="/register/confirm" element={<ConfirmRegistration />} />
+      <Route path="/register/review" element={<ConfirmSubmitStep />} />
       <Route path="/register/success" element={<RegistrationSuccess />} />
 
       <Route path="*" element={<Navigate to="/register" replace />} />

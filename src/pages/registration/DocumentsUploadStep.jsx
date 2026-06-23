@@ -1,0 +1,124 @@
+import { ChevronDown } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { PageContainer } from '../../components/layout/PageContainer';
+import { StepFooter } from '../../components/layout/StepFooter';
+import { Input } from '../../components/ui/Input';
+import { DocumentCaptureCard } from '../../components/registration/DocumentCaptureCard';
+import { OnboardingHeader } from '../../components/registration/OnboardingHeader';
+import { StepIndicator } from '../../components/registration/StepIndicator';
+import { DOCUMENT_TYPES } from '../../constants/registration';
+import { useRegistration } from '../../context/RegistrationContext';
+
+export default function DocumentsUploadStep() {
+  const navigate = useNavigate();
+  const { data, updateData } = useRegistration();
+  const docConfig = DOCUMENT_TYPES[data.documentType] || DOCUMENT_TYPES.passport;
+
+  const requiredFieldsFilled = docConfig.fields
+    .filter((field) => field.required)
+    .every((field) => data[field.key]?.trim());
+
+  const canProceed =
+    requiredFieldsFilled &&
+    data.documentPhotoTaken &&
+    data.selfiePhotoTaken &&
+    data.videoShortTaken;
+
+  const handleDocTypeChange = (e) => {
+    updateData({
+      documentType: e.target.value,
+      documentNumber: '',
+      documentIssueDate: '',
+      documentExpirationDate: '',
+      documentPhotoTaken: false,
+      selfiePhotoTaken: false,
+      videoShortTaken: false,
+    });
+  };
+
+  return (
+    <div className="min-h-dvh bg-gray-50">
+      <PageContainer>
+        <OnboardingHeader />
+        <StepIndicator step={3} totalSteps={4} label="Documents Upload" />
+
+        <div className="flex-1 space-y-6 overflow-y-auto px-4 pb-6 sm:px-6">
+          <section className="space-y-4">
+            <h2 className="text-base font-bold text-gray-900">Document details</h2>
+
+            <div>
+              <label className="mb-1.5 block text-sm font-semibold text-gray-900">
+                Select type document<span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <select
+                  value={data.documentType}
+                  onChange={handleDocTypeChange}
+                  className="w-full appearance-none rounded-lg border border-gray-200 bg-gray-100 px-4 py-3 pr-10 text-sm text-gray-900 outline-none transition focus:border-msp-green focus:ring-2 focus:ring-msp-green/20"
+                >
+                  {Object.entries(DOCUMENT_TYPES).map(([key, config]) => (
+                    <option key={key} value={key}>
+                      {config.label}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown
+                  className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500"
+                  aria-hidden="true"
+                />
+              </div>
+            </div>
+
+            {docConfig.fields.map((field) => (
+              <Input
+                key={field.key}
+                label={field.label}
+                required={field.required}
+                placeholder={field.placeholder}
+                value={data[field.key]}
+                onChange={(e) => updateData({ [field.key]: e.target.value })}
+              />
+            ))}
+          </section>
+
+          <DocumentCaptureCard
+            title="Upload document"
+            variant="document"
+            completed={data.documentPhotoTaken}
+            onCapture={() =>
+              updateData({ documentPhotoTaken: !data.documentPhotoTaken })
+            }
+          />
+
+          <DocumentCaptureCard
+            title="Take photo with document"
+            instruction="Take a selfie holding your passport open to the photo page"
+            variant="selfie"
+            completed={data.selfiePhotoTaken}
+            onCapture={() =>
+              updateData({ selfiePhotoTaken: !data.selfiePhotoTaken })
+            }
+          />
+
+          <DocumentCaptureCard
+            title="Take video shorts"
+            instruction="Take a video shorts holding your document"
+            variant="selfie"
+            actionLabel="Take Video"
+            actionType="video"
+            completed={data.videoShortTaken}
+            onCapture={() =>
+              updateData({ videoShortTaken: !data.videoShortTaken })
+            }
+          />
+        </div>
+
+        <StepFooter
+          onBack={() => navigate('/register/kyc')}
+          onNext={() => navigate('/register/pin')}
+          nextDisabled={!canProceed}
+        />
+      </PageContainer>
+    </div>
+  );
+}

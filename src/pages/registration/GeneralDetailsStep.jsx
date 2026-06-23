@@ -1,5 +1,6 @@
 import { Calendar } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { AppHeader } from '../../components/layout/AppHeader';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { StepFooter } from '../../components/layout/StepFooter';
@@ -9,10 +10,55 @@ import { OnboardingHeader } from '../../components/registration/OnboardingHeader
 import { StepIndicator } from '../../components/registration/StepIndicator';
 import { DISTRICTS, PROVINCES, TITLE_OPTIONS } from '../../constants/registration';
 import { useRegistration } from '../../context/RegistrationContext';
+import { useLocationStore } from '../../store/useLocationStore';
 
 export default function GeneralDetailsStep() {
   const navigate = useNavigate();
   const { data, updateData } = useRegistration();
+  const { provinces, cities, prefixes, fetchProvinces, fetchCities, fetchPrefixes, loadingProvinces, loadingCities, loadingPrefixes } = useLocationStore();
+
+  useEffect(() => {
+    fetchProvinces();
+    fetchPrefixes();
+  }, [fetchProvinces, fetchPrefixes]);
+
+  useEffect(() => {
+    if (data.province) {
+      if (provinces.length > 0) {
+        const selectedProv = provinces.find(p => String(p.id) === String(data.province) || String(p.pvISO2Code) === String(data.province));
+        if (selectedProv && (selectedProv.iso2 || selectedProv.pvISO2Code)) {
+          fetchCities(selectedProv.iso2 || selectedProv.pvISO2Code);
+        } else {
+          fetchCities(data.province);
+        }
+      } else {
+        fetchCities(data.province);
+      }
+    }
+  }, [data.province, provinces, fetchCities]);
+
+  const lang = localStorage.getItem('lang') || 'la';
+
+  const prefixOptions = prefixes.length > 0 
+    ? prefixes.map(p => ({ 
+        label: lang === 'la' ? (p.nameLa || p.titleNameLa || p.nameEn || p.titleNameEn || p.titleCode) : (p.nameEn || p.titleNameEn || p.nameLa || p.titleNameLa || p.titleCode), 
+        value: p.id || p.titleCode 
+      })) 
+    : TITLE_OPTIONS;
+
+  const provinceOptions = provinces.length > 0 
+    ? provinces.map(p => ({ 
+        label: lang === 'la' ? (p.nameLa || p.provinceNameLa || p.nameEn || p.provinceNameEn || p.pvISO2Code) : (p.nameEn || p.provinceNameEn || p.nameLa || p.provinceNameLa || p.pvISO2Code), 
+        value: p.id || p.pvISO2Code || p.provinceId 
+      })) 
+    : PROVINCES;
+
+  const districtOptions = cities.length > 0 
+    ? cities.map(c => ({ 
+        label: lang === 'la' ? (c.nameLa || c.cityNameLa || c.nameEn || c.cityNameEn || c.cityId) : (c.nameEn || c.cityNameEn || c.nameLa || c.cityNameLa || c.cityId), 
+        value: c.id || c.cityId 
+      })) 
+    : DISTRICTS;
 
   const canProceed =
     data.firstName.trim() &&
@@ -36,10 +82,10 @@ export default function GeneralDetailsStep() {
               <Select
                 label="Title"
                 required
-                options={TITLE_OPTIONS}
+                options={prefixOptions}
                 value={data.title}
                 onChange={(e) => updateData({ title: e.target.value })}
-                placeholder="Mr"
+                placeholder={loadingPrefixes ? "Loading..." : "Mr"}
                 className="col-span-1"
               />
               <Input
@@ -57,6 +103,14 @@ export default function GeneralDetailsStep() {
               placeholder="Enter your Last Name"
               value={data.lastName}
               onChange={(e) => updateData({ lastName: e.target.value })}
+            />
+       
+            <Input 
+             label="Midle Name"
+              placeholder="Enter Midle Name"
+              value={data.lastName}
+              onChange={(e) => updateData({ MidleName: e.target.value })}
+            
             />
 
             <div>
@@ -90,21 +144,24 @@ export default function GeneralDetailsStep() {
             <h2 className="text-base font-bold text-gray-900">Address details</h2>
 
             <Select
-              label="District"
+              label="Province"
               required
-              options={DISTRICTS}
-              value={data.district}
-              onChange={(e) => updateData({ district: e.target.value })}
-              placeholder="Select your District"
+              options={provinceOptions}
+              value={data.province}
+              onChange={(e) => {
+                updateData({ province: e.target.value, district: '' }); // Reset district when province changes
+              }}
+              placeholder={loadingProvinces ? "Loading..." : "Select your Province"}
             />
 
             <Select
-              label="Province"
+              label="District"
               required
-              options={PROVINCES}
-              value={data.province}
-              onChange={(e) => updateData({ province: e.target.value })}
-              placeholder="Select your Province"
+              options={districtOptions}
+              value={data.district}
+              onChange={(e) => updateData({ district: e.target.value })}
+              placeholder={loadingCities ? "Loading..." : "Select your District"}
+              disabled={!data.province}
             />
 
             <Input

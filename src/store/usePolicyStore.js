@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { aesDecrypt } from '../utils/crypto';
+import api from '../utils/API';
 
 export const usePolicyStore = create((set, get) => ({
   condition: null,
@@ -14,15 +15,9 @@ export const usePolicyStore = create((set, get) => ({
     if (get().condition) return;
     set({ loading: true, error: null });
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/policy`, {
-        headers: {
-          langCode: localStorage.getItem("lang"),
-          // 'X-MSP-DATA-Signature': import.meta.env.VITE_MSP_DATA_SIGNATURE,
-        },
-      });
-      if (!response.ok) throw new Error(`Failed to load policy (${response.status})`);
-      const data = await response.json();
-  
+      const response = await api.get('policy');
+      const data = response.data;
+
       const raw = data?.data;
       console.log(raw)
       const decrypted = await aesDecrypt(raw);

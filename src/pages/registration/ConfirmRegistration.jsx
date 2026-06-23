@@ -5,6 +5,8 @@ import { StepFooter } from '../../components/layout/StepFooter';
 import { Checkbox } from '../../components/ui/Checkbox';
 import { InfoRow, InfoSection } from '../../components/registration/InfoRow';
 import { useRegistration } from '../../context/RegistrationContext';
+import { useRegistrationStore } from '../../store/useRegistrationStore';
+import { aesEncrypt } from '../../utils/crypto';
 
 function formatDate(dateString) {
   if (!dateString) return '—';
@@ -19,8 +21,41 @@ function formatDate(dateString) {
 export default function ConfirmRegistration() {
   const navigate = useNavigate();
   const { data, updateData, fullName } = useRegistration();
+  const { submitInfo, submitting } = useRegistrationStore();
 
   const contactValue = data.country === 'laos' ? data.phone : data.email;
+
+  const handleRegister = async () => {
+    const signupData = {
+      prefixCode: data.title,
+      firstNameEn: data.firstName,
+      firstNameLa: data.firstName,
+      lastNameEn: data.lastName,
+      lastNameLa: data.lastName,
+      birthday: data.dateOfBirth,
+      tel: data.phone,
+      email: data.email,
+      password: aesEncrypt(data.pin),
+      confirmPassword: aesEncrypt(data.pin),
+      addresses: [{
+        provinceId: parseInt(data.province, 10),
+        cityId: parseInt(data.district, 10),
+        village: data.village,
+      }],
+      documentType: data.documentType,
+      documentNumber: data.documentNumber,
+      documentIssueDate: data.documentIssueDate,
+      documentExpirationDate: data.documentExpirationDate,
+      kycMethod: data.kycMethod,
+      securityAnswers: data.securityAnswers,
+      customerCode: data.customerCode,
+    };
+    
+    const success = await submitInfo(signupData);
+    if (success) {
+      navigate('/register/review');
+    }
+  };
 
   return (
     <div className="min-h-dvh bg-gray-50">
@@ -78,9 +113,9 @@ export default function ConfirmRegistration() {
 
         <StepFooter
           singleButton
-          singleLabel="Register"
-          onSingle={() => navigate('/register/success')}
-          nextDisabled={!data.confirmTermsAccepted}
+          singleLabel={submitting ? "Submitting..." : "Register"}
+          onSingle={handleRegister}
+          nextDisabled={!data.confirmTermsAccepted || submitting}
         />
       </PageContainer>
     </div>
