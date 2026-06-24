@@ -30,11 +30,14 @@ export default function ConfirmRegistration() {
     // TODO: profileId should be dynamic
     const profileId = 1; 
     const signupData = {
+      profileId: data.profileId || null,
       prefixCode: data.title,
-      firstNameEn: data.firstName,
       firstNameLa: data.firstName,
-      lastNameEn: data.lastName,
+      middleNameLa: data.middleName || '',
       lastNameLa: data.lastName,
+      firstNameEn: data.firstName,
+      middleNameEn: data.middleName || '',
+      lastNameEn: data.lastName,
       birthday: data.dateOfBirth,
       tel: data.phone,
       email: data.email,
@@ -42,19 +45,29 @@ export default function ConfirmRegistration() {
       latitude: 0,
       longitude: 0,
       password: aesEncrypt(data.pin),
-      confirmPassword: aesEncrypt(data.pin),
-      addresses: [{
+      confirmPassword: aesEncrypt(data.confirmPin),
+      addresses: {
+        profileId: data.profileId || null,
+        addressType: 'CURRENT',
+        roadLineOne: '1',
+        roadLineTwo: '2',
         provinceId: parseInt(data.province, 10),
         cityId: parseInt(data.district, 10),
         village: data.village,
-      }],
-      documentType: data.documentType,
-      documentNumber: data.documentNumber,
-      documentIssueDate: data.documentIssueDate,
-      documentExpirationDate: data.documentExpirationDate,
-      kycMethod: data.kycMethod,
-      securityAnswers: data.securityAnswers,
-      customerCode: data.customerCode,
+      },
+      device: {
+        deviceId: crypto.randomUUID?.() || 'DEV-' + Date.now(),
+        deviceName: navigator.platform || '',
+        deviceOS: /iPhone|iPad|iPod/.test(navigator.userAgent) ? 'ios' : /Android/.test(navigator.userAgent) ? 'android' : 'web',
+        deviceModelName: '',
+        deviceModelNumber: '',
+        deviceIMEI: '',
+        deviceMEID: '',
+        deviceSEID: '',
+        deviceInfo: navigator.userAgent || '',
+        pushToken: '',
+      },
+      customerType: data.country === 'laos' ? 'LA' : 'foreign',
     };
 
     const success = await submitInfo(signupData);

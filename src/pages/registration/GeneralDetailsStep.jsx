@@ -132,8 +132,8 @@ export default function GeneralDetailsStep() {
             <Input 
              label="Midle Name"
               placeholder="Enter Midle Name"
-              value={data.lastName}
-              onChange={(e) => updateData({ MidleName: e.target.value })}
+              value={data.middleName}
+              onChange={(e) => updateData({ middleName: e.target.value })}
             
             />
 
