@@ -5,6 +5,9 @@ import { Input } from '../../components/ui/Input';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { useRegistration } from '../../context/RegistrationContext';
 
+import msp_logo from '../../assets/icons/ic_app_msp.png';
+import meporm_logo from '../../assets/icons/ic_meporm.png';
+
 function MepormLogo() {
   return (
     <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-msp-green shadow-sm">
@@ -28,24 +31,22 @@ export default function KycMepormStep() {
   return (
     <div className="min-h-dvh bg-white">
       <PageContainer>
-        <div className="flex justify-end px-4 pt-4 sm:px-6">
+        <div className="flex justify-end px-4 pt-4 mb-5 sm:px-6">
           <button
             type="button"
             onClick={() => navigate('/register/kyc')}
-            className="rounded-lg p-1 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
+            className="rounded-lg p-1 text-gray-500 transition hover:bg-gray-100 hover:text-gray-600"
             aria-label="Close"
           >
-            <X className="h-5 w-5" />
+            <X className="h-5 w-5" strokeWidth={3} />
           </button>
         </div>
 
         <div className="flex flex-1 flex-col px-4 pb-6 sm:px-6">
-          <div className="flex items-center justify-center gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-msp-green shadow-sm">
-              <span className="text-sm font-bold text-msp-neon">MSP</span>
-            </div>
+          <div className="flex items-center justify-center gap-4">                    
+            <img src={msp_logo} alt="MSP Logo" className="object-cover h-auto w-14" />             
             <ArrowLeftRight className="h-5 w-5 text-gray-800" />
-            <MepormLogo />
+            <img src={meporm_logo} alt="Meporm Logo" className="object-cover h-auto w-14" />           
           </div>
 
           <h1 className="mt-6 text-center text-lg font-bold text-gray-900">

@@ -13,7 +13,6 @@ export const useRegistrationStore = create((set) => ({
       const timestamp = new Date().toISOString().replace('T', ' ').split('.')[0];
       const bodyData = {
         timestamp,
-        channel: 'MOBILE',
         data: data,
       };
       const bodyJson = JSON.stringify(bodyData);

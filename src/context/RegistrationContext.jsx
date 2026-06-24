@@ -44,9 +44,9 @@ export function RegistrationProvider({ children }) {
   }, []);
 
   const fullName = useMemo(() => {
-    const parts = [data.title, data.firstName, data.middleName, data.lastName].filter(Boolean);
+    const parts = [data.title, data.firstName, data.lastName].filter(Boolean);
     return parts.join(' ').toUpperCase();
-  }, [data.title, data.firstName, data.middleName, data.lastName]);
+  }, [data.title, data.firstName, data.lastName]);
 
   const value = useMemo(
     () => ({

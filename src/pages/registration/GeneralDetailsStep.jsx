@@ -61,11 +61,12 @@ export default function GeneralDetailsStep() {
     : DISTRICTS;
 
   const canProceed =
-    data.firstName.trim() &&
+    data.firstNameEn?.trim() &&
+    data.firstNameLa?.trim() &&
     data.dateOfBirth &&
     data.district &&
     data.province &&
-    data.village.trim();
+    data.village?.trim();
 
   return (
     <div className="min-h-dvh bg-gray-50">
@@ -76,7 +77,7 @@ export default function GeneralDetailsStep() {
 
         <div className="flex-1 space-y-8 px-4 pb-6 sm:px-6">
           <section className="space-y-4">
-            <h2 className="text-base font-bold text-gray-900">Infomation</h2>
+            <h2 className="text-base font-bold text-gray-900">Information</h2>
 
             <div className="grid grid-cols-3 gap-3">
               <Select
@@ -88,13 +89,36 @@ export default function GeneralDetailsStep() {
                 placeholder={loadingPrefixes ? "Loading..." : "Mr"}
                 className="col-span-1"
               />
+              <div className="col-span-2 grid grid-cols-2 gap-3">
+                <Input
+                  label="First Name (Lao)"
+                  required
+                  placeholder="Enter your First Name in Lao"
+                  value={data.firstNameLa}
+                  onChange={(e) => updateData({ firstNameLa: e.target.value })}
+                />
+                <Input
+                  label="First Name (EN)"
+                  required
+                  placeholder="Enter your First Name in English"
+                  value={data.firstNameEn}
+                  onChange={(e) => updateData({ firstNameEn: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
               <Input
-                label="First Name"
-                required
-                placeholder="Enter your First Name"
-                value={data.firstName}
-                onChange={(e) => updateData({ firstName: e.target.value })}
-                className="col-span-2"
+                label="Middle Name (Lao)"
+                placeholder="Enter Middle Name in Lao"
+                value={data.middleNameLa}
+                onChange={(e) => updateData({ middleNameLa: e.target.value })}
+              />
+              <Input
+                label="Middle Name (EN)"
+                placeholder="Enter Middle Name in English"
+                value={data.middleNameEn}
+                onChange={(e) => updateData({ middleNameEn: e.target.value })}
               />
             </div>
 
@@ -108,8 +132,8 @@ export default function GeneralDetailsStep() {
             <Input 
              label="Midle Name"
               placeholder="Enter Midle Name"
-              value={data.middleName}
-              onChange={(e) => updateData({ middleName: e.target.value })}
+              value={data.lastName}
+              onChange={(e) => updateData({ MidleName: e.target.value })}
             
             />
 

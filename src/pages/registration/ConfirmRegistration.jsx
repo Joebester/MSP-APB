@@ -24,17 +24,17 @@ export default function ConfirmRegistration() {
   const { submitInfo, submitting } = useRegistrationStore();
 
   const contactValue = data.country === 'laos' ? data.phone : data.email;
+  const fullNameLa = [data.title, data.firstNameLa, data.lastNameLa].filter(Boolean).join(' ').toUpperCase();
 
   const handleRegister = async () => {
+    // TODO: profileId should be dynamic
+    const profileId = 1; 
     const signupData = {
-      profileId: data.profileId || null,
       prefixCode: data.title,
-      firstNameLa: data.firstName,
-      middleNameLa: data.middleName || '',
-      lastNameLa: data.lastName,
       firstNameEn: data.firstName,
-      middleNameEn: data.middleName || '',
+      firstNameLa: data.firstName,
       lastNameEn: data.lastName,
+      lastNameLa: data.lastName,
       birthday: data.dateOfBirth,
       tel: data.phone,
       email: data.email,
@@ -42,31 +42,21 @@ export default function ConfirmRegistration() {
       latitude: 0,
       longitude: 0,
       password: aesEncrypt(data.pin),
-      confirmPassword: aesEncrypt(data.confirmPin),
-      addresses: {
-        profileId: data.profileId || null,
-        addressType: 'CURRENT',
-        roadLineOne: '1',
-        roadLineTwo: '2',
+      confirmPassword: aesEncrypt(data.pin),
+      addresses: [{
         provinceId: parseInt(data.province, 10),
         cityId: parseInt(data.district, 10),
         village: data.village,
-      },
-      device: {
-        deviceId: crypto.randomUUID?.() || 'DEV-' + Date.now(),
-        deviceName: navigator.platform || '',
-        deviceOS: /iPhone|iPad|iPod/.test(navigator.userAgent) ? 'ios' : /Android/.test(navigator.userAgent) ? 'android' : 'web',
-        deviceModelName: '',
-        deviceModelNumber: '',
-        deviceIMEI: '',
-        deviceMEID: '',
-        deviceSEID: '',
-        deviceInfo: navigator.userAgent || '',
-        pushToken: '',
-      },
-      customerType: data.country === 'laos' ? 'LA' : 'foreign',
+      }],
+      documentType: data.documentType,
+      documentNumber: data.documentNumber,
+      documentIssueDate: data.documentIssueDate,
+      documentExpirationDate: data.documentExpirationDate,
+      kycMethod: data.kycMethod,
+      securityAnswers: data.securityAnswers,
+      customerCode: data.customerCode,
     };
-    
+
     const success = await submitInfo(signupData);
     if (success) {
       navigate('/register/review');
@@ -89,7 +79,8 @@ export default function ConfirmRegistration() {
         <div className="flex-1 bg-gray-50 px-4 py-6 sm:px-6">
           <div className="space-y-8">
             <InfoSection title="Applicant details">
-              <InfoRow label="Full name:" value={fullName} />
+              <InfoRow label="Full name (EN):" value={fullName} />
+              <InfoRow label="Full name (Lao):" value={fullNameLa} />
               <InfoRow
                 label={data.country === 'laos' ? 'Phone number:' : 'Email:'}
                 value={contactValue}
