@@ -9,11 +9,15 @@ const defaultState = {
   emailOtp: '',
   title: 'Mr',
   firstName: '',
+  middleName: '',
   lastName: '',
+  occupation: '',
   dateOfBirth: '',
   district: '',
   province: '',
   village: '',
+  roadLineOne: '',
+  roadLineTwo: '',
   kycMethod: '',
   documentType: 'passport',
   documentNumber: '',
@@ -27,6 +31,7 @@ const defaultState = {
   pin: '',
   termsAccepted: false,
   confirmTermsAccepted: false,
+  confirmPin: '',
 };
 
 const RegistrationContext = createContext(null);
@@ -39,9 +44,9 @@ export function RegistrationProvider({ children }) {
   }, []);
 
   const fullName = useMemo(() => {
-    const parts = [data.title, data.firstName, data.lastName].filter(Boolean);
+    const parts = [data.title, data.firstName, data.middleName, data.lastName].filter(Boolean);
     return parts.join(' ').toUpperCase();
-  }, [data.title, data.firstName, data.lastName]);
+  }, [data.title, data.firstName, data.middleName, data.lastName]);
 
   const value = useMemo(
     () => ({

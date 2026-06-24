@@ -17,7 +17,7 @@ export default function SetPinStep() {
     
     if (isComplete) {
       updateData({ pin });
-      const timer = setTimeout(() => navigate('/register/terms'), 400);
+      const timer = setTimeout(() => navigate('/register/confirm-pin'), 400);
       return () => clearTimeout(timer);
     }
   }, [isComplete, pin, updateData, navigate]);

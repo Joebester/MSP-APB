@@ -71,7 +71,12 @@ export const useVerifyStore = create((set) => ({
       console.log('verifyOtp response:', response.data);
 
       if (response.data?.code === 200 || response.data?.success === true || response.data?.success === 'true') {
-        return response.data?.data || true;
+        const raw = response.data?.data;
+        if (raw && typeof raw === 'string' && raw.includes(':')) {
+          const decrypted = aesDecrypt(raw);
+          return JSON.parse(decrypted);
+        }
+        return raw || true;
       } else {
         set({ verifyError: response.data?.message || 'OTP verification failed' });
         toast.error(response.data?.message || 'OTP verification failed');
@@ -95,24 +100,28 @@ export const useVerifyStore = create((set) => ({
     try {
       toast.success(`Sending OTP to ${email}`);
 
-      const encryptedEmail = aesEncrypt(email);
+      const bodyData = {
+        email: email,
+      };
+      const bodyJson = JSON.stringify(bodyData);
+      const signature = aesEncrypt(bodyJson);
 
       const response = await api.post(
         "/email/request",
-        {
-          email: encryptedEmail,
-        },
+        bodyData,
         {
           headers: {
             langCode: localStorage.getItem("lang") || "la",
+            'X-MSP-DATA-Signature': signature,
           },
         }
       );
 
       console.log("sendEmailOtp response:", response.data);
 
-      if (response.data?.code === 200 || response.data?.success === true || response.data?.success === "true") {
-        toast.success(response.data?.message || 'OTP sent successfully');
+      const headerCode = response.data?.header?.code;
+      if (headerCode === "0000" || headerCode === "00" || response.data?.code === 200 || response.data?.success === true) {
+        toast.success(response.data?.header?.message || response.data?.message || 'OTP sent successfully');
 
         set({
           sendSuccess: true,
@@ -132,12 +141,14 @@ export const useVerifyStore = create((set) => ({
           }
         }, 1000);
       } else {
-        toast.error(response.data?.message || "Failed to send OTP");
+        console.error("sendEmailOtp error response:", response.data);
+        toast.error(response.data?.header?.message || response.data?.message || "Failed to send OTP");
       }
     } catch (err) {
-      console.error("sendEmailOtp error:", err);
+      console.error("sendEmailOtp error:", err.response?.data || err);
 
       const errorMessage =
+        err.response?.data?.header?.message ||
         err.response?.data?.message ||
         err.message ||
         "Failed to send OTP";
@@ -158,39 +169,49 @@ export const useVerifyStore = create((set) => ({
     set({ verifying: true, verifyError: null });
 
     try {
-      const encryptedEmail = aesEncrypt(email);
+      const bodyData = {
+        email: email,
+        otp: otp,
+      };
+      const bodyJson = JSON.stringify(bodyData);
+      const signature = aesEncrypt(bodyJson);
 
       const response = await api.post(
         "/email/verify",
-        {
-          email: encryptedEmail,
-          otp: otp,
-        },
+        bodyData,
         {
           headers: {
             langCode: localStorage.getItem("lang") || "la",
+            'X-MSP-DATA-Signature': signature,
           },
         }
       );
 
       console.log("verifyEmailOtp response:", response.data);
 
-      if (response.data?.code === 200 || response.data?.success === true || response.data?.success === "true") {
-        toast.success(response.data?.message || "OTP verified successfully");
+      const headerCode = response.data?.header?.code;
+      if (headerCode === "0000" || headerCode === "00" || response.data?.code === 200) {
+        toast.success(response.data?.header?.message || "OTP verified successfully");
 
         set({
           verifySuccess: true,
         });
 
-        return response.data?.data || true;
+        const body = response.data?.body;
+        if (body) {
+          return body;
+        }
+        return true;
       } else {
-        toast.error(response.data?.message || "Invalid OTP");
+        console.error("verifyEmailOtp error response:", response.data);
+        toast.error(response.data?.header?.message || response.data?.message || "Invalid OTP");
         return false;
       }
     } catch (err) {
-      console.error("verifyEmailOtp error:", err);
+      console.error("verifyEmailOtp error:", err.response?.data || err);
 
       const errorMessage =
+        err.response?.data?.header?.message ||
         err.response?.data?.message ||
         err.message ||
         "OTP verification failed";

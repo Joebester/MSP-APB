@@ -108,8 +108,8 @@ export default function GeneralDetailsStep() {
             <Input 
              label="Midle Name"
               placeholder="Enter Midle Name"
-              value={data.lastName}
-              onChange={(e) => updateData({ MidleName: e.target.value })}
+              value={data.middleName}
+              onChange={(e) => updateData({ middleName: e.target.value })}
             
             />
 
@@ -137,6 +137,13 @@ export default function GeneralDetailsStep() {
               placeholder="Enter your Email Address"
               value={data.email}
               onChange={(e) => updateData({ email: e.target.value })}
+            />
+
+            <Input
+              label="Occupation"
+              placeholder="Enter your Occupation"
+              value={data.occupation}
+              onChange={(e) => updateData({ occupation: e.target.value })}
             />
           </section>
 
@@ -171,6 +178,7 @@ export default function GeneralDetailsStep() {
               value={data.village}
               onChange={(e) => updateData({ village: e.target.value })}
             />
+
           </section>
         </div>
 
