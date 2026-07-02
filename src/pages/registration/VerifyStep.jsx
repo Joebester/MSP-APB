@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useVerifyStore } from '../../store/useVerifyStore';
-import { AppHeader } from '../../components/layout/AppHeader';
+// import { AppHeader } from '../../components/layout/AppHeader';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { StepFooter } from '../../components/layout/StepFooter';
 import { Button } from '../../components/ui/Button';
@@ -26,9 +26,15 @@ export default function VerifyStep() {
 
   return (
     <div className="min-h-dvh bg-gray-50">
-      <AppHeader />
+      {/* <AppHeader /> */}
       <PageContainer>
         <OnboardingHeader />
+        <Button
+          className="absolute right-3 top-6.5"
+          onClick={() => navigate('/register/kyc')}
+        >
+          <Trans>KYC</Trans>
+        </Button>
         <StepIndicator step={1} totalSteps={4} label={<Trans>Verify</Trans>} />
 
         <div className="flex-1 space-y-6 px-4 pb-6 sm:px-6">

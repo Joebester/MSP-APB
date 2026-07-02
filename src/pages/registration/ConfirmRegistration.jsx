@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { AppHeader } from '../../components/layout/AppHeader';
+// import { AppHeader } from '../../components/layout/AppHeader';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { StepFooter } from '../../components/layout/StepFooter';
 import { Checkbox } from '../../components/ui/Checkbox';
@@ -75,7 +75,7 @@ export default function ConfirmRegistration() {
 
   return (
     <div className="min-h-dvh bg-gray-50">
-      <AppHeader />
+      {/* <AppHeader /> */}
       <PageContainer>
         <div className="px-4 py-6 sm:px-6">
           <h1 className="text-xl font-bold text-gray-900">Register</h1>

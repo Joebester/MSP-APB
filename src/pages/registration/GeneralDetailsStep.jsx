@@ -1,7 +1,7 @@
 import { Calendar } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import { AppHeader } from '../../components/layout/AppHeader';
+// import { AppHeader } from '../../components/layout/AppHeader';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { StepFooter } from '../../components/layout/StepFooter';
 import { Input } from '../../components/ui/Input';
@@ -69,7 +69,7 @@ export default function GeneralDetailsStep() {
 
   return (
     <div className="min-h-dvh bg-gray-50">
-      <AppHeader />
+      {/* <AppHeader /> */}
       <PageContainer>
         <OnboardingHeader />
         <StepIndicator step={2} totalSteps={4} label="General Details" />

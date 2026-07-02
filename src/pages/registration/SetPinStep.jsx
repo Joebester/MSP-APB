@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AppHeader } from '../../components/layout/AppHeader';
+// import { AppHeader } from '../../components/layout/AppHeader';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { PinHeader, PinIndicators } from '../../components/registration/PinDisplay';
 import { PinKeypad } from '../../components/registration/PinKeypad';
@@ -24,7 +24,7 @@ export default function SetPinStep() {
 
   return (
     <div className="min-h-dvh bg-gray-50">
-      <AppHeader />
+      {/* <AppHeader /> */}
       <PageContainer className="justify-center">
         <div className="flex flex-1 flex-col items-center justify-center gap-10 px-4 py-10 sm:px-6">
           <PinHeader />
