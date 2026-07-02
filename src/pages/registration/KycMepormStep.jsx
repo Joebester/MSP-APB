@@ -5,6 +5,10 @@ import { Input } from '../../components/ui/Input';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { useRegistration } from '../../context/RegistrationContext';
 
+import Meporm_Icon from '../../assets/icons/ic_meporm.png';
+import Msp_Icon from '../../assets/icons/ic_app_msp.png';
+
+
 function MepormLogo() {
   return (
     <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-msp-green shadow-sm">
@@ -41,11 +45,15 @@ export default function KycMepormStep() {
 
         <div className="flex flex-1 flex-col px-4 pb-6 sm:px-6">
           <div className="flex items-center justify-center gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-msp-green shadow-sm">
+            {/* <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-msp-green shadow-sm">
               <span className="text-sm font-bold text-msp-neon">MSP</span>
-            </div>
+            </div> */}
+
+            <img src={Msp_Icon} alt="MSP Logo" className="h-14 w-auto" />
             <ArrowLeftRight className="h-5 w-5 text-gray-800" />
-            <MepormLogo />
+            {/* <MepormLogo /> */}
+            <img src={Meporm_Icon} alt="Meporm Logo" className="h-14 w-auto" />
+            
           </div>
 
           <h1 className="mt-6 text-center text-lg font-bold text-gray-900">
