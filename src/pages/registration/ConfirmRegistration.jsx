@@ -1,5 +1,4 @@
 import { Link, useNavigate } from 'react-router-dom';
-// import { AppHeader } from '../../components/layout/AppHeader';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { StepFooter } from '../../components/layout/StepFooter';
 import { Checkbox } from '../../components/ui/Checkbox';
@@ -20,21 +19,28 @@ function formatDate(dateString) {
 
 export default function ConfirmRegistration() {
   const navigate = useNavigate();
-  const { data, updateData, fullName } = useRegistration();
+  const { data, updateData, fullName: fullNameForeign } = useRegistration();
   const { submitInfo, submitting } = useRegistrationStore();
 
-  const contactValue = data.country === 'laos' ? data.phone : data.email;
+  const isLaos = data.country === 'laos';
+
+  const displayFullName = isLaos
+    ? [data.title, data.firstNameLa, data.middleNameLa, data.lastNameLa]
+        .filter(Boolean).join(' ').toUpperCase()
+    : fullNameForeign;
+
+  const contactValue = isLaos ? data.phone : data.email;
 
   const handleRegister = async () => {
     const signupData = {
       profileId: data.profileId || null,
       prefixCode: data.title,
-      firstNameLa: data.firstName,
-      middleNameLa: data.middleName || '',
-      lastNameLa: data.lastName,
-      firstNameEn: data.firstName,
-      middleNameEn: data.middleName || '',
-      lastNameEn: data.lastName,
+      firstNameLa: isLaos ? data.firstNameLa : data.firstName,
+      middleNameLa: isLaos ? data.middleNameLa : (data.middleName || ''),
+      lastNameLa: isLaos ? data.lastNameLa : data.lastName,
+      firstNameEn: isLaos ? data.firstNameEn : data.firstName,
+      middleNameEn: isLaos ? data.middleNameEn : (data.middleName || ''),
+      lastNameEn: isLaos ? data.lastNameEn : data.lastName,
       birthday: data.dateOfBirth,
       tel: data.phone,
       email: data.email,
@@ -55,7 +61,11 @@ export default function ConfirmRegistration() {
       device: {
         deviceId: crypto.randomUUID?.() || 'DEV-' + Date.now(),
         deviceName: navigator.platform || '',
-        deviceOS: /iPhone|iPad|iPod/.test(navigator.userAgent) ? 'ios' : /Android/.test(navigator.userAgent) ? 'android' : 'web',
+        deviceOS: /iPhone|iPad|iPod/.test(navigator.userAgent)
+          ? 'ios'
+          : /Android/.test(navigator.userAgent)
+          ? 'android'
+          : 'web',
         deviceModelName: '',
         deviceModelNumber: '',
         deviceIMEI: '',
@@ -64,9 +74,9 @@ export default function ConfirmRegistration() {
         deviceInfo: navigator.userAgent || '',
         pushToken: '',
       },
-      customerType: data.country === 'laos' ? 'LA' : 'foreign',
+      customerType: isLaos ? 'LA' : 'foreign',
     };
-    
+
     const success = await submitInfo(signupData);
     if (success) {
       navigate('/register/review');
@@ -75,7 +85,6 @@ export default function ConfirmRegistration() {
 
   return (
     <div className="min-h-dvh bg-gray-50">
-      {/* <AppHeader /> */}
       <PageContainer>
         <div className="px-4 py-6 sm:px-6">
           <h1 className="text-xl font-bold text-gray-900">Register</h1>
@@ -89,9 +98,9 @@ export default function ConfirmRegistration() {
         <div className="flex-1 bg-gray-50 px-4 py-6 sm:px-6">
           <div className="space-y-8">
             <InfoSection title="Applicant details">
-              <InfoRow label="Full name:" value={fullName} />
+              <InfoRow label="Full name:" value={displayFullName} />
               <InfoRow
-                label={data.country === 'laos' ? 'Phone number:' : 'Email:'}
+                label={isLaos ? 'Phone number:' : 'Email:'}
                 value={contactValue}
               />
               <InfoRow label="Date of birth:" value={formatDate(data.dateOfBirth)} />
@@ -100,7 +109,7 @@ export default function ConfirmRegistration() {
             <InfoSection title="Present address">
               <InfoRow label="Province:" value={data.province} />
               <InfoRow label="District:" value={data.district} />
-              <InfoRow label="Village:" value={data.village || 'null'} />
+              <InfoRow label="Village:" value={data.village || '—'} />
             </InfoSection>
           </div>
         </div>
@@ -109,9 +118,7 @@ export default function ConfirmRegistration() {
           <div className="flex justify-center">
             <Checkbox
               checked={data.confirmTermsAccepted}
-              onChange={(e) =>
-                updateData({ confirmTermsAccepted: e.target.checked })
-              }
+              onChange={(e) => updateData({ confirmTermsAccepted: e.target.checked })}
               label={
                 <span className="text-sm text-gray-900">
                   Accept all terms,{' '}
@@ -129,7 +136,7 @@ export default function ConfirmRegistration() {
 
         <StepFooter
           singleButton
-          singleLabel={submitting ? "Submitting..." : "Register"}
+          singleLabel={submitting ? 'Submitting...' : 'Register'}
           onSingle={handleRegister}
           nextDisabled={!data.confirmTermsAccepted || submitting}
         />
