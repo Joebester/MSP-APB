@@ -69,16 +69,26 @@ export default function DocumentsUploadStep() {
               </div>
             </div>
 
-            {docConfig.fields.map((field) => (
-              <Input
-                key={field.key}
-                label={field.label}
-                required={field.required}
-                placeholder={field.placeholder}
-                value={data[field.key]}
-                onChange={(e) => updateData({ [field.key]: e.target.value })}
-              />
-            ))}
+            {docConfig.fields.map((field) =>
+              field.type === 'date' ? (
+                <DatePicker
+                  key={field.key}
+                  label={field.label}
+                  required={field.required}
+                  value={data[field.key] || ''}
+                  onChange={(val) => updateData({ [field.key]: val })}
+                />
+              ) : (
+                <Input
+                  key={field.key}
+                  label={field.label}
+                  required={field.required}
+                  placeholder={field.placeholder}
+                  value={data[field.key]}
+                  onChange={(e) => updateData({ [field.key]: e.target.value })}
+                />
+              )
+            )}
           </section>
 
           <DocumentCaptureCard
