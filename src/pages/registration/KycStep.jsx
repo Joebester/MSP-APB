@@ -1,8 +1,13 @@
 import { useNavigate } from 'react-router-dom';
-import { FileText, Sprout } from 'lucide-react';
+import { FileText, Sprout, X } from 'lucide-react';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { KycOptionCard } from '../../components/registration/DocumentCaptureCard';
 import { useRegistration } from '../../context/RegistrationContext';
+
+import Meporm_Icon from '../../assets/icons/ic_meporm.png'; 
+import Documents_Icon from '../../assets/icons/ic_doc.png'; 
+import header_Icon from '../../assets/icons/ic_kyc_user.png';
+
 
 function KycIllustration() {
   return (
@@ -35,10 +40,23 @@ export default function KycStep() {
   return (
     <div className="min-h-dvh bg-white">
       <PageContainer>
-        <div className="flex flex-1 flex-col px-4 py-8 sm:px-6">
-          <KycIllustration />
+        <div className="flex flex-1 flex-col px-4 py-6 sm:px-6">
+          {/* <KycIllustration /> */}
 
-          <h1 className="mt-8 text-center text-2xl font-bold text-gray-900">KYC</h1>
+          <div className="flex justify-end px-4 pt-4 sm:px-6 mb-6">
+          <button
+            type="button"
+            onClick={() => navigate('/register/verify?lang=la')}
+            className="rounded-lg p-1 text-gray-500 transition hover:bg-gray-100 hover:text-gray-600"
+            aria-label="Close"
+          >
+            <X className="h-5 w-5" strokeWidth={3.5} />
+          </button>
+          </div>
+
+          <img src={header_Icon} alt="KYC Header" className="mx-auto h-20 w-auto" />
+
+          <h1 className="mt-4 text-center text-2xl font-bold text-gray-900">KYC</h1>
           <p className="mx-auto mt-4 max-w-sm text-center text-sm leading-relaxed text-gray-600">
             The use of electronic wallet products requires proper user
             authentication to identify the true owner of the wallet and comply
@@ -47,17 +65,13 @@ export default function KycStep() {
 
           <div className="mt-8 space-y-4">
             <KycOptionCard
-              icon={
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-100">
-                  <Sprout className="h-5 w-5 text-orange-600" />
-                </div>
-              }
+              icon={<img src={Meporm_Icon} alt="Meporm Logo" className="h-10 w-auto" />}
               title="Verify by APB Meporm"
               subtitle="Reference your account APB Meporm already"
               onClick={() => handleSelect('meporm')}
             />
             <KycOptionCard
-              icon={<FileText className="h-6 w-6 text-msp-green" />}
+              icon={<img src={Documents_Icon} alt="Documents Logo" className="h-10 w-auto" />}
               title="Verify by Documents"
               subtitle="Identity document, Census number, Passport"
               onClick={() => handleSelect('documents')}
