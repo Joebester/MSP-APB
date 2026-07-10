@@ -35,7 +35,7 @@ export default function KycMepormStep() {
         <div className="flex justify-end px-4 pt-4 sm:px-6">
           <button
             type="button"
-            onClick={() => navigate('/register/kyc')}
+            onClick={() => navigate('/kyc')}
             className="rounded-lg p-1 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
             aria-label="Close"
           >
@@ -53,7 +53,7 @@ export default function KycMepormStep() {
             <ArrowLeftRight className="h-5 w-5 text-gray-800" />
             {/* <MepormLogo /> */}
             <img src={Meporm_Icon} alt="Meporm Logo" className="h-14 w-auto" />
-            
+
           </div>
 
           <h1 className="mt-6 text-center text-lg font-bold text-gray-900">
@@ -97,7 +97,7 @@ export default function KycMepormStep() {
             variant="secondary"
             className="w-full text-teal-700"
             size="lg"
-            onClick={() => navigate('/register/kyc')}
+            onClick={() => navigate('/kyc')}
           >
             Close
           </Button>

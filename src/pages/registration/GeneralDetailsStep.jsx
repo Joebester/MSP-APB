@@ -275,8 +275,8 @@ export default function GeneralDetailsStep() {
         </div>
 
         <StepFooter
-          onBack={() => navigate('/register/verify')}
-          onNext={() => navigate('/register/pin')}
+          onBack={() => navigate('/verify')}
+          onNext={() => navigate('/pin')}
           nextDisabled={!canProceed}
         />
       </PageContainer>

@@ -37,7 +37,7 @@ export default function TermsPage() {
         <StepFooter
           singleButton
           singleLabel="Continue"
-          onSingle={() => navigate('/register/confirm')}
+          onSingle={() => navigate('/confirm')}
           nextDisabled={!data.termsAccepted}
         />
       </PageContainer>

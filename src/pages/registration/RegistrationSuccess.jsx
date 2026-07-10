@@ -12,7 +12,7 @@ export default function RegistrationSuccess() {
         <div className="flex justify-end">
           <button
             type="button"
-            onClick={() => navigate('/register')}
+            onClick={() => navigate('/')}
             className="rounded-lg p-1 text-white transition hover:bg-white/10"
             aria-label="Close"
           >

@@ -37,23 +37,21 @@ export function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/register" replace />} />
+      <Route path="/" element={<RegistrationIntro />} />
+      <Route path="/policy" element={<PolicyPage />} />
+      <Route path="/verify" element={<VerifyStep />} />
+      <Route path="/details" element={<GeneralDetailsStep />} />
+      <Route path="/kyc" element={<KycStep />} />
+      <Route path="/kyc/meporm" element={<KycMepormStep />} />
+      <Route path="/documents" element={<DocumentsUploadStep />} />
+      <Route path="/pin" element={<SetPinStep />} />
+      <Route path="/confirm-pin" element={<ConfirmPinStep />} />
+      <Route path="/terms" element={<TermsPage />} />
+      <Route path="/confirm" element={<ConfirmRegistration />} />
+      <Route path="/review" element={<ConfirmSubmitStep />} />
+      <Route path="/success" element={<RegistrationSuccess />} />
 
-      <Route path="/register" element={<RegistrationIntro />} />
-      <Route path="/register/policy" element={<PolicyPage />} />
-      <Route path="/register/verify" element={<VerifyStep />} />
-      <Route path="/register/details" element={<GeneralDetailsStep />} />
-      <Route path="/register/kyc" element={<KycStep />} />
-      <Route path="/register/kyc/meporm" element={<KycMepormStep />} />
-      <Route path="/register/documents" element={<DocumentsUploadStep />} />
-      <Route path="/register/pin" element={<SetPinStep />} />
-      <Route path="/register/confirm-pin" element={<ConfirmPinStep />} />
-      <Route path="/register/terms" element={<TermsPage />} />
-      <Route path="/register/confirm" element={<ConfirmRegistration />} />
-      <Route path="/register/review" element={<ConfirmSubmitStep />} />
-      <Route path="/register/success" element={<RegistrationSuccess />} />
-
-      <Route path="*" element={<Navigate to="/register" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

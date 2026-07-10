@@ -20,7 +20,7 @@ export default function ConfirmPinStep() {
         return;
       }
       updateData({ confirmPin: pin });
-      const timer = setTimeout(() => navigate('/register/terms'), 400);
+      const timer = setTimeout(() => navigate('/terms'), 400);
       return () => clearTimeout(timer);
     }
   }, [isComplete, pin, data.pin, updateData, navigate]);

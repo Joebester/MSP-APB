@@ -13,11 +13,11 @@ export default function SetPinStep() {
   const { pin, pinLength, addDigit, removeDigit, isComplete } = usePinEntry();
 
   useEffect(() => {
-    
-    
+
+
     if (isComplete) {
       updateData({ pin });
-      const timer = setTimeout(() => navigate('/register/confirm-pin'), 400);
+      const timer = setTimeout(() => navigate('/confirm-pin'), 400);
       return () => clearTimeout(timer);
     }
   }, [isComplete, pin, updateData, navigate]);

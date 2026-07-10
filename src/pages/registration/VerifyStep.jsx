@@ -16,7 +16,7 @@ import toast from 'react-hot-toast';
 export default function VerifyStep() {
   const navigate = useNavigate();
   const { data, updateData } = useRegistration();
-  const { sending, sendError, sendSuccess, sendOtp,sendEmailOtp, countdown, verifying, verifyError, verifyOtp, verifyEmailOtp } = useVerifyStore();
+  const { sending, sendError, sendSuccess, sendOtp, sendEmailOtp, countdown, verifying, verifyError, verifyOtp, verifyEmailOtp } = useVerifyStore();
   const isLaos = data.country === 'laos';
 
   const canProceed = isLaos
@@ -31,7 +31,7 @@ export default function VerifyStep() {
         <OnboardingHeader />
         <Button
           className="absolute right-3 top-6.5"
-          onClick={() => navigate('/register/kyc')}
+          onClick={() => navigate('/kyc')}
         >
           <Trans>KYC</Trans>
         </Button>
@@ -136,7 +136,7 @@ export default function VerifyStep() {
           <p className="px-4 pb-2 text-center text-xs text-red-500 sm:px-6">{verifyError}</p>
         )}
         <StepFooter
-          onBack={() => navigate('/register/policy?lang=' + localStorage.getItem("lang"))}
+          onBack={() => navigate('/policy?lang=' + localStorage.getItem("lang"))}
           onNext={async () => {
             const result = isLaos
               ? await verifyOtp(
@@ -153,7 +153,7 @@ export default function VerifyStep() {
                 updateData({ profileId: result.profileId });
               }
               navigate(
-                '/register/details?lang=' +
+                '/details?lang=' +
                 localStorage.getItem("lang")
               );
             }

@@ -47,10 +47,3 @@ src/
 ├── main.jsx
 └── index.css
 ```
-
-## Build
-
-```bash
-npm run build
-npm run preview
-```

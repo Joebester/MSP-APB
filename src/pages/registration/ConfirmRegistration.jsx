@@ -26,7 +26,7 @@ export default function ConfirmRegistration() {
 
   const displayFullName = isLaos
     ? [data.title, data.firstNameLa, data.middleNameLa, data.lastNameLa]
-        .filter(Boolean).join(' ').toUpperCase()
+      .filter(Boolean).join(' ').toUpperCase()
     : fullNameForeign;
 
   const contactValue = isLaos ? data.phone : data.email;
@@ -64,8 +64,8 @@ export default function ConfirmRegistration() {
         deviceOS: /iPhone|iPad|iPod/.test(navigator.userAgent)
           ? 'ios'
           : /Android/.test(navigator.userAgent)
-          ? 'android'
-          : 'web',
+            ? 'android'
+            : 'web',
         deviceModelName: '',
         deviceModelNumber: '',
         deviceIMEI: '',
@@ -79,7 +79,7 @@ export default function ConfirmRegistration() {
 
     const success = await submitInfo(signupData);
     if (success) {
-      navigate('/register/review');
+      navigate('/review');
     }
   };
 
@@ -123,7 +123,7 @@ export default function ConfirmRegistration() {
                 <span className="text-sm text-gray-900">
                   Accept all terms,{' '}
                   <Link
-                    to="/register/terms"
+                    to="/terms"
                     className="font-semibold text-blue-600 underline"
                   >
                     Details

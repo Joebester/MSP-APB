@@ -4,8 +4,8 @@ import { PageContainer } from '../../components/layout/PageContainer';
 import { KycOptionCard } from '../../components/registration/DocumentCaptureCard';
 import { useRegistration } from '../../context/RegistrationContext';
 
-import Meporm_Icon from '../../assets/icons/ic_meporm.png'; 
-import Documents_Icon from '../../assets/icons/ic_doc.png'; 
+import Meporm_Icon from '../../assets/icons/ic_meporm.png';
+import Documents_Icon from '../../assets/icons/ic_doc.png';
 import header_Icon from '../../assets/icons/ic_kyc_user.png';
 
 
@@ -31,9 +31,9 @@ export default function KycStep() {
   const handleSelect = (method) => {
     updateData({ kycMethod: method });
     if (method === 'meporm') {
-      navigate('/register/kyc/meporm');
+      navigate('/kyc/meporm');
     } else {
-      navigate('/register/documents');
+      navigate('/documents');
     }
   };
 
@@ -44,14 +44,14 @@ export default function KycStep() {
           {/* <KycIllustration /> */}
 
           <div className="flex justify-end px-4 pt-4 sm:px-6 mb-6">
-          <button
-            type="button"
-            onClick={() => navigate('/register/verify?lang=la')}
-            className="rounded-lg p-1 text-gray-500 transition hover:bg-gray-100 hover:text-gray-600"
-            aria-label="Close"
-          >
-            <X className="h-5 w-5" strokeWidth={3.5} />
-          </button>
+            <button
+              type="button"
+              onClick={() => navigate('/verify?lang=la')}
+              className="rounded-lg p-1 text-gray-500 transition hover:bg-gray-100 hover:text-gray-600"
+              aria-label="Close"
+            >
+              <X className="h-5 w-5" strokeWidth={3.5} />
+            </button>
           </div>
 
           <img src={header_Icon} alt="KYC Header" className="mx-auto h-20 w-auto" />

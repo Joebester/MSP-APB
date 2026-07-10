@@ -7,7 +7,7 @@ import '../src/css/index.css'
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/msp-register">
       <Toaster position='top-center' reverseOrder={false} />
       <RegistrationProvider>
         <AppRoutes />

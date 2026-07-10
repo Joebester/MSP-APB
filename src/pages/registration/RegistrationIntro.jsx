@@ -58,7 +58,7 @@ export default function RegistrationIntro() {
             variant="white"
             size="lg"
             className="w-full gap-1"
-            onClick={() => navigate('/register/policy?lang=' + localStorage.getItem("lang"))}
+            onClick={() => navigate('/policy?lang=' + localStorage.getItem("lang"))}
           >
             <Trans>Register Now</Trans> <span aria-hidden="true">&gt;</span>
           </Button>

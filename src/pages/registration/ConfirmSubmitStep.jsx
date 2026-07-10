@@ -14,7 +14,7 @@ export default function ConfirmSubmitStep() {
   const handleConfirm = async () => {
     const success = await confirmRegistration(data.profileId);
     if (success) {
-      navigate('/register/success');
+      navigate('/success');
     }
   };
 
@@ -34,7 +34,7 @@ export default function ConfirmSubmitStep() {
         </div>
 
         <StepFooter
-          onBack={() => navigate('/register/confirm')}
+          onBack={() => navigate('/confirm')}
           onNext={handleConfirm}
           nextLabel={confirming ? "Submitting..." : "Continue"}
           nextDisabled={confirming}
