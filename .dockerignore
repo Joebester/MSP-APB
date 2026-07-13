@@ -7,7 +7,8 @@ pnpm-debug.log*
 .git
 .gitignore
 .vscode
-.env*
+.env.local
+.env.*.local
 /dist
 /build
 **/dist
