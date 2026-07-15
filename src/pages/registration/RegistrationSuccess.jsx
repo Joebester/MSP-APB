@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Check, MessageCircle, X } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { GradientBackground } from '../../components/registration/GradientBackground';
+import { Trans } from 'react-i18next';
 
 export default function RegistrationSuccess() {
   const navigate = useNavigate();
@@ -10,14 +11,14 @@ export default function RegistrationSuccess() {
     <GradientBackground>
       <div className="mx-auto flex min-h-dvh max-w-lg flex-col px-6 py-6 sm:px-8">
         <div className="flex justify-end">
-          <button
+          {/* <button
             type="button"
             onClick={() => navigate('/register')}
             className="rounded-lg p-1 text-white transition hover:bg-white/10"
             aria-label="Close"
           >
             <X className="h-6 w-6" />
-          </button>
+          </button> */}
         </div>
 
         <div className="flex flex-1 flex-col items-center justify-center text-center">
@@ -26,20 +27,19 @@ export default function RegistrationSuccess() {
           </div>
 
           <h1 className="mt-6 text-2xl font-bold text-white sm:text-3xl">
-            Registration Successfully
+            <Trans>Registration Successfully</Trans>
           </h1>
 
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/90 sm:text-base">
-            System may take time to verify the information, you can use other
-            services, except for financial transactions
+            <Trans>System may</Trans>
           </p>
 
-          <p className="mt-8 text-sm text-white">Contact the nearby service center</p>
+          <p className="mt-8 text-sm text-white"><Trans>Contact the nearby service center</Trans></p>
           <a
             href="#location"
             className="mt-1 text-sm font-bold text-white underline"
           >
-            Location &gt;&gt;
+            <Trans>Location</Trans> &gt;&gt;
           </a>
 
           <MessageCircle
@@ -55,7 +55,7 @@ export default function RegistrationSuccess() {
             className="w-full gap-1"
             onClick={() => navigate('/')}
           >
-            Let&apos;s Start <span aria-hidden="true">&gt;</span>
+            <Trans>Let&apos;s Start</Trans> <span aria-hidden="true">&gt;</span>
           </Button>
         </div>
       </div>

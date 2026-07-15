@@ -5,16 +5,23 @@ import { OnboardingHeader } from '../../components/registration/OnboardingHeader
 import { StepIndicator } from '../../components/registration/StepIndicator';
 import { useRegistration } from '../../context/RegistrationContext';
 import { useRegistrationStore } from '../../store/useRegistrationStore';
+import { Trans } from 'react-i18next';
+import { aesDecrypt } from '../../utils/crypto';
 
 export default function ConfirmSubmitStep() {
   const navigate = useNavigate();
   const { data } = useRegistration();
   const { confirmRegistration, confirming } = useRegistrationStore();
 
+  const stored = localStorage.getItem('register_profile'); // '"71A8...:4E2C..."'
+  const raw = JSON.parse(stored); // → "71A8...:4E2C..." (quotes removed)
+  const u_id = aesDecrypt(raw);
+
   const handleConfirm = async () => {
-    const success = await confirmRegistration(data.profileId);
+
+    const success = await confirmRegistration(u_id);
     if (success) {
-      navigate('/register/success');
+      navigate('/success?lang=' + localStorage.getItem("lang"));
     }
   };
 
@@ -22,19 +29,17 @@ export default function ConfirmSubmitStep() {
     <div className="min-h-dvh bg-gray-50">
       <PageContainer>
         <OnboardingHeader />
-        <StepIndicator step={4} totalSteps={4} label="Confirm & Submit" />
+        <StepIndicator step={4} totalSteps={4} label={<Trans>Confirm & Submit</Trans>} />
 
         <div className="flex-1 px-4 pb-6 sm:px-6">
-          <h2 className="text-base font-bold text-gray-900">Review & Confirm</h2>
+          <h2 className="text-base font-bold text-gray-900"><Trans>Review & Confirm</Trans></h2>
           <p className="mt-4 text-sm leading-relaxed text-gray-700">
-            Please review your registration details carefully before submitting.
-            Ensure all information is accurate and up to date. Once submitted,
-            your application will be processed based on the information provided.
+            <Trans>Review text</Trans>
           </p>
         </div>
 
         <StepFooter
-          onBack={() => navigate('/register/confirm')}
+          onBack={() => navigate('/confirm')}
           onNext={handleConfirm}
           nextLabel={confirming ? "Submitting..." : "Continue"}
           nextDisabled={confirming}

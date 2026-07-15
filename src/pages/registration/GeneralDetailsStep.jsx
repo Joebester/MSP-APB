@@ -11,12 +11,13 @@ import { StepIndicator } from '../../components/registration/StepIndicator';
 import { DISTRICTS, PROVINCES, TITLE_OPTIONS } from '../../constants/registration';
 import { useRegistration } from '../../context/RegistrationContext';
 import { useLocationStore } from '../../store/useLocationStore';
+import { Trans } from 'react-i18next';
 
 export default function GeneralDetailsStep() {
   const navigate = useNavigate();
-  const { data, updateData } = useRegistration();
+  const { data, updateData, updateDataSelect } = useRegistration();
   const { provinces, cities, prefixes, fetchProvinces, fetchCities, fetchPrefixes, loadingProvinces, loadingCities, loadingPrefixes } = useLocationStore();
-
+  // console.log(JSON.stringify(data))
   useEffect(() => {
     fetchProvinces();
     fetchPrefixes();
@@ -25,8 +26,8 @@ export default function GeneralDetailsStep() {
   useEffect(() => {
     if (data.province) {
       if (provinces.length > 0) {
-        const selectedProv = provinces.find(p => String(p.id) === String(data.province) || String(p.pvISO2Code) === String(data.province));
-        if (selectedProv && (selectedProv.iso2 || selectedProv.pvISO2Code)) {
+        const selectedProv = provinces.find(p => String(p.id) === String(data.province) || String(p.iso2) === String(data.province));
+        if (selectedProv && (selectedProv.iso2)) {
           fetchCities(selectedProv.iso2 || selectedProv.pvISO2Code);
         } else {
           fetchCities(data.province);
@@ -39,48 +40,50 @@ export default function GeneralDetailsStep() {
 
   const lang = localStorage.getItem('lang') || 'la';
 
-  const prefixOptions = prefixes.length > 0 
-    ? prefixes.map(p => ({ 
-        label: lang === 'la' ? (p.nameLa || p.titleNameLa || p.nameEn || p.titleNameEn || p.titleCode) : (p.nameEn || p.titleNameEn || p.nameLa || p.titleNameLa || p.titleCode), 
-        value: p.id || p.titleCode 
-      })) 
+  const prefixOptions = prefixes.length > 0
+    ? prefixes.map(p => ({
+      label: lang === 'la' ? (p.prefixName) : (p.prefixName),
+      value: p.prefixId
+    }))
     : TITLE_OPTIONS;
 
-  const provinceOptions = provinces.length > 0 
-    ? provinces.map(p => ({ 
-        label: lang === 'la' ? (p.nameLa || p.provinceNameLa || p.nameEn || p.provinceNameEn || p.pvISO2Code) : (p.nameEn || p.provinceNameEn || p.nameLa || p.provinceNameLa || p.pvISO2Code), 
-        value: p.id || p.pvISO2Code || p.provinceId 
-      })) 
+  const provinceOptions = provinces.length > 0
+    ? provinces.map(p => ({
+      label: lang === 'la' ? (p.nameLa) : (p.nameEn),
+      value: p.id
+    }))
     : PROVINCES;
 
-  const districtOptions = cities.length > 0 
-    ? cities.map(c => ({ 
-        label: lang === 'la' ? (c.nameLa || c.cityNameLa || c.nameEn || c.cityNameEn || c.cityId) : (c.nameEn || c.cityNameEn || c.nameLa || c.cityNameLa || c.cityId), 
-        value: c.id || c.cityId 
-      })) 
+  const districtOptions = cities.length > 0
+    ? cities.map(c => ({
+      label: lang === 'la' ? (c.nameLa || c.cityNameLa || c.nameEn || c.cityNameEn || c.cityId) : (c.nameEn || c.cityNameEn || c.nameLa || c.cityNameLa || c.cityId),
+      value: c.id || c.cityId
+    }))
     : DISTRICTS;
 
   const canProceed =
     data.firstName.trim() &&
-    data.dateOfBirth &&
-    data.district &&
-    data.province &&
-    data.village.trim();
+    data.lastName.trim() &&
+    data.occupation &&
+    (data.district || data.districtName) &&
+    (data.province || data.provinceName) &&
+    data.village.trim() &&
+    data.alertDOB === false;
 
   return (
     <div className="min-h-dvh bg-gray-50">
-      <AppHeader />
+      {/* <AppHeader /> */}
       <PageContainer>
         <OnboardingHeader />
-        <StepIndicator step={2} totalSteps={4} label="General Details" />
+        <StepIndicator step={2} totalSteps={4} label={<Trans>General Details</Trans>} />
 
         <div className="flex-1 space-y-8 px-4 pb-6 sm:px-6">
           <section className="space-y-4">
-            <h2 className="text-base font-bold text-gray-900">Infomation</h2>
+            <h2 className="text-base font-bold text-gray-900"><Trans>Information</Trans></h2>
 
             <div className="grid grid-cols-3 gap-3">
               <Select
-                label="Title"
+                label={<Trans>Title</Trans>}
                 required
                 options={prefixOptions}
                 value={data.title}
@@ -88,34 +91,94 @@ export default function GeneralDetailsStep() {
                 placeholder={loadingPrefixes ? "Loading..." : "Mr"}
                 className="col-span-1"
               />
-              <Input
-                label="First Name"
+
+              {data.country === "international" ? <Input
+                label={<Trans>First Name</Trans>}
                 required
-                placeholder="Enter your First Name"
+                placeholder={lang === "la" ? "ປ້ອນຊື່ຂອງທ່ານ" : "Enter your First Name"}
                 value={data.firstName}
                 onChange={(e) => updateData({ firstName: e.target.value })}
                 className="col-span-2"
-              />
+                helperText={(data.alertFirstName && data.firstName === '') && <p className='text-red-500'><Trans>Please</Trans> <Trans>Enter your First Name</Trans></p>}
+              /> : <Input
+                label={<Trans>First Name Lao</Trans>}
+                required
+                placeholder={lang === "la" ? "ປ້ອນຊື່ຂອງທ່ານ" : "Enter your First Name"}
+                value={data.firstName}
+                onChange={(e) => updateData({ firstName: e.target.value })}
+                className="col-span-2"
+                helperText={(data.alertFirstName && data.firstName === '') && <p className='text-red-500'><Trans>Please</Trans> <Trans>Enter your First Name</Trans></p>}
+              />}
+
+
             </div>
 
-            <Input
-              label="Last Name"
-              placeholder="Enter your Last Name"
-              value={data.lastName}
-              onChange={(e) => updateData({ lastName: e.target.value })}
-            />
-       
-            <Input 
-             label="Midle Name"
-              placeholder="Enter Midle Name"
-              value={data.lastName}
-              onChange={(e) => updateData({ MidleName: e.target.value })}
-            
-            />
+            {data.country === "international" ? <>
+              <Input
+                label={<Trans>Last Name</Trans>}
+                placeholder={lang === 'la' ? "ປ້ອນນາມສະກຸນຂອງທ່ານ" : "Enter your Last Name"}
+                value={data.lastName}
+                onChange={(e) => updateData({ lastName: e.target.value })}
+                helperText={(data.alertLastName && data.lastName === '') && <p className='text-red-500'><Trans>Please</Trans> <Trans>Enter your Last Name</Trans></p>}
+              />
+
+              <Input
+                label={<Trans>Middle Name</Trans>}
+                placeholder={lang === 'la' ? "ປ້ອນຊື່ກາງ" : 'Enter Midle Name'}
+                value={data.MidleName}
+                onChange={(e) => updateData({ MidleName: e.target.value })}
+              // helperText={(data.MidleName && data.MidleName === '') && <p className='text-red-500'><Trans>Please</Trans> <Trans>Enter your MidleName Name</Trans></p>}
+              />
+            </> : <>
+              <Input
+                label={<Trans>Last Name Lao</Trans>}
+                placeholder={lang === 'la' ? "ປ້ອນນາມສະກຸນຂອງທ່ານ" : "Enter your Last Name"}
+                value={data.lastName}
+                required
+                onChange={(e) => updateData({ lastName: e.target.value })}
+                helperText={(data.alertLastName && data.lastName === '') && <p className='text-red-500'><Trans>Please</Trans> <Trans>Enter your Last Name</Trans></p>}
+              />
+
+              <Input
+                label={<Trans>Middle Name Lao</Trans>}
+                placeholder={lang === 'la' ? "ປ້ອນຊື່ກາງ" : 'Enter Midle Name'}
+                value={data.MidleName}
+                onChange={(e) => updateData({ MidleName: e.target.value })}
+              // helperText={(data.MidleName && data.MidleName === '') && <p className='text-red-500'><Trans>Please</Trans> <Trans>Enter your MidleName Name</Trans></p>}
+              />
+
+
+              <Input
+                label={<Trans>First Name English</Trans>}
+                required
+                placeholder={lang === "la" ? "ປ້ອນຊື່ຂອງທ່ານ" : "Enter your First Name"}
+                value={data.firstNameEn}
+                onChange={(e) => updateData({ firstNameEn: e.target.value })}
+                className="col-span-2"
+                helperText={(data.alertFirstNameEn && data.firstNameEn === '') && <p className='text-red-500'><Trans>Please</Trans> <Trans>Enter your First Name</Trans></p>}
+              />
+              <Input
+                label={<Trans>Last Name English</Trans>}
+                required
+                placeholder={lang === 'la' ? "ປ້ອນນາມສະກຸນຂອງທ່ານ" : "Enter your Last Name"}
+                value={data.lastNameEn}
+                onChange={(e) => updateData({ lastNameEn: e.target.value })}
+                helperText={(data.alertLastNameEn && data.lastNameEn === '') && <p className='text-red-500'><Trans>Please</Trans> <Trans>Enter your Last Name</Trans></p>}
+              />
+
+              <Input
+                label={<Trans>Middle Name English</Trans>}
+                placeholder={lang === 'la' ? "ປ້ອນຊື່ກາງ" : 'Enter Midle Name'}
+                value={data.MidleNameEn}
+                onChange={(e) => updateData({ MidleNameEn: e.target.value })}
+              // helperText={(data.MidleName && data.MidleName === '') && <p className='text-red-500'><Trans>Please</Trans> <Trans>Enter your MidleName Name</Trans></p>}
+              />
+            </>}
+
 
             <div>
               <label className="mb-1.5 block text-sm font-semibold text-gray-900">
-                Date of Birth<span className="text-red-500">*</span>
+                <Trans>Date of Birth</Trans><span className="text-red-500">*</span>
               </label>
               <div className="relative">
                 <input
@@ -128,55 +191,124 @@ export default function GeneralDetailsStep() {
                   className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
                   aria-hidden="true"
                 />
+
+              </div>
+              <div>
+                {(data.alertDOB) && <p className='text-red-500'><Trans>You are under 18 Years old please contact MSP admin</Trans></p>}
               </div>
             </div>
 
-            <Input
-              label="Email Address"
+            {(data.country === 'international') ? <Input
+              label={<Trans>Email Address</Trans>}
               type="email"
-              placeholder="Enter your Email Address"
+              placeholder={'Enter your Email Address'}
               value={data.email}
+              disabled={true}
               onChange={(e) => updateData({ email: e.target.value })}
-            />
+            /> : <Input
+              label={<Trans>Phone Number</Trans>}
+              type="number"
+              placeholder="Enter your Tel"
+              value={data.phone}
+              disabled={true}
+              onChange={(e) => updateData({ phone: e.target.value })}
+            />}
+
           </section>
 
-          <section className="space-y-4">
-            <h2 className="text-base font-bold text-gray-900">Address details</h2>
+          {(data.country === "laos") ? <div>
+            <section className="space-y-4">
+              <h2 className="text-base font-bold text-gray-900"><Trans>Address details</Trans></h2>
+              <Select
+                label={<Trans>Province</Trans>}
+                required
+                options={provinceOptions}
+                value={data.province}
+                onSelect={({ value, label }) => {
+                  updateData({ province: value, provinceName: label }); // Reset district when province changes
+                }}
+                // onChange={(e) => {
+                //   updateDataSelect({ province: e.target.value }); // Reset district when province changes
+                // }}
+                placeholder={loadingProvinces ? <Trans>Loading...</Trans> : <Trans>Select your Province</Trans>}
+              />
 
-            <Select
-              label="Province"
-              required
-              options={provinceOptions}
-              value={data.province}
-              onChange={(e) => {
-                updateData({ province: e.target.value, district: '' }); // Reset district when province changes
-              }}
-              placeholder={loadingProvinces ? "Loading..." : "Select your Province"}
-            />
+              <Select
+                label={<Trans>District</Trans>}
+                required
+                options={districtOptions}
+                value={data.district}
+                onSelect={({ value, label }) => {
+                  updateData({ district: value, districtName: label }); // Reset district when province changes
+                }}
+                // onChange={(e) => updateDataSelect({ district: e.target.label })}
+                placeholder={loadingCities ? <Trans>Loading...</Trans> : <Trans>Select your District</Trans>}
+                disabled={!data.province}
+              />
 
-            <Select
-              label="District"
-              required
-              options={districtOptions}
-              value={data.district}
-              onChange={(e) => updateData({ district: e.target.value })}
-              placeholder={loadingCities ? "Loading..." : "Select your District"}
-              disabled={!data.province}
-            />
+              <Input
+                label={<Trans>Village</Trans>}
+                required
+                placeholder={lang === "la" ? "ປ້ອນບ້ານຂອງທ່ານ" : "Enter your Village"}
+                value={data.village}
+                onChange={(e) => updateData({ village: e.target.value })}
+                helperText={(data.alertVillage && data.village === '') && <p className='text-red-500'><Trans>Please</Trans> <Trans>Enter your Village</Trans></p>}
+              />
 
-            <Input
-              label="Village"
-              required
-              placeholder="Enter your Village"
-              value={data.village}
-              onChange={(e) => updateData({ village: e.target.value })}
-            />
-          </section>
+              <Input
+                label={<Trans>occupation</Trans>}
+                required
+                placeholder={lang === "la" ? "ປ້ອນອາຊີບຂອງທ່ານ" : "Enter your occupation"}
+                value={data.occupation}
+                onChange={(e) => updateData({ occupation: e.target.value })}
+                helperText={(data.alertOccupation && data.occupation === '') && <p className='text-red-500'><Trans>Please</Trans> <Trans>Enter your Occupation</Trans></p>}
+              />
+            </section>
+          </div> : <div>
+            <section className="space-y-4">
+              <h2 className="text-base font-bold text-gray-900"><Trans>Address details</Trans></h2>
+              <Input
+                label={<Trans>Province</Trans>}
+                required
+                placeholder={lang === "la" ? "ປ້ອນແຂວງຂອງທ່ານ" : "Enter your Province"}
+                value={data.provinceName}
+                onChange={(e) => updateData({ provinceName: e.target.value })}
+              />
+
+              <Input
+                label={<Trans>District</Trans>}
+                required
+                placeholder={lang === "la" ? "ປ້ອນເມືອງຂອງທ່ານ" : "Enter your District"}
+                value={data.districtName}
+                onChange={(e) => updateData({ districtName: e.target.value })}
+              />
+
+              <Input
+                label={<Trans>Village</Trans>}
+                required
+                placeholder={lang === "la" ? "ປ້ອນບ້ານຂອງທ່ານ" : "Enter your Village"}
+                value={data.village}
+                onChange={(e) => updateData({ village: e.target.value })}
+                helperText={(data.alertVillage && data.village === '') && <p className='text-red-500'><Trans>Please</Trans> <Trans>Enter your Village</Trans></p>}
+              />
+              <Input
+                label={<Trans>occupation</Trans>}
+                required
+                placeholder={lang === "la" ? "ປ້ອນອາຊີບຂອງທ່ານ" : "Enter your occupation"}
+                value={data.occupation}
+                onChange={(e) => updateData({ occupation: e.target.value })}
+                helperText={(data.alertOccupation && data.occupation === '') && <p className='text-red-500'><Trans>Please</Trans> <Trans>Enter your Occupation</Trans></p>}
+              />
+
+
+            </section>
+          </div>}
+
         </div>
 
         <StepFooter
-          onBack={() => navigate('/register/verify')}
-          onNext={() => navigate('/register/pin')}
+          onBack={() => navigate('/verify?lang=' + lang)}
+          onNext={() => navigate('/pin?lang=' + lang)}
           nextDisabled={!canProceed}
         />
       </PageContainer>

@@ -1,4 +1,5 @@
 import { Lock } from 'lucide-react';
+import { Trans } from 'react-i18next';
 
 export function PinIndicators({ length, filled }) {
   return (
@@ -23,7 +24,7 @@ export function PinHeader() {
       <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
         <Lock className="h-7 w-7 text-gray-400" strokeWidth={1.5} />
       </div>
-      <h2 className="text-lg font-bold text-gray-900">Set your PIN Code</h2>
+      <h2 className="text-lg font-bold text-gray-900"><Trans>Set your PIN Code</Trans></h2>
     </div>
   );
 }

@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: import.meta.env.VITE_DEFUALT_API_URL,
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
@@ -12,7 +12,7 @@ const api = axios.create({
 // Request interceptor to automatically attach language header
 api.interceptors.request.use(
   (config) => {
-    const lang = localStorage.getItem('lang') === "la" ? 'LO': 'EN';
+    const lang = localStorage.getItem('lang') || 'la';
     config.headers['langCode'] = lang;
     return config;
   },

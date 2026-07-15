@@ -26,9 +26,9 @@ export default function KycStep() {
   const handleSelect = (method) => {
     updateData({ kycMethod: method });
     if (method === 'meporm') {
-      navigate('/register/kyc/meporm');
+      navigate('/kyc/meporm');
     } else {
-      navigate('/register/documents');
+      navigate('/documents');
     }
   };
 

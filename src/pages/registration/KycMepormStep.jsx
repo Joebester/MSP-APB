@@ -31,7 +31,7 @@ export default function KycMepormStep() {
         <div className="flex justify-end px-4 pt-4 sm:px-6">
           <button
             type="button"
-            onClick={() => navigate('/register/kyc')}
+            onClick={() => navigate('/kyc')}
             className="rounded-lg p-1 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
             aria-label="Close"
           >
@@ -89,7 +89,7 @@ export default function KycMepormStep() {
             variant="secondary"
             className="w-full text-teal-700"
             size="lg"
-            onClick={() => navigate('/register/kyc')}
+            onClick={() => navigate('/kyc')}
           >
             Close
           </Button>
