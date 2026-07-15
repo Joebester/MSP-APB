@@ -15,7 +15,8 @@ import { useLocationStore } from '../../store/useLocationStore';
 export default function GeneralDetailsStep() {
   const navigate = useNavigate();
   const { data, updateData } = useRegistration();
-  const { provinces, cities, prefixes, fetchProvinces, fetchCities, fetchPrefixes, loadingProvinces, loadingCities, loadingPrefixes } = useLocationStore();
+  const { provinces, cities, villages, prefixes, fetchProvinces, fetchCities, fetchVillages, fetchPrefixes, loadingProvinces, loadingCities, loadingVillages, loadingPrefixes } = useLocationStore();
+  const isLaos = data.country === 'laos';
 
   useEffect(() => {
     fetchProvinces();
@@ -36,6 +37,12 @@ export default function GeneralDetailsStep() {
       }
     }
   }, [data.province, provinces, fetchCities]);
+
+  useEffect(() => {
+    if (isLaos && data.district) {
+      fetchVillages(data.district);
+    }
+  }, [isLaos, data.district, fetchVillages]);
 
   const lang = localStorage.getItem('lang') || 'la';
 
@@ -60,12 +67,19 @@ export default function GeneralDetailsStep() {
       })) 
     : DISTRICTS;
 
+  const villageOptions = villages.length > 0 
+    ? villages.map(v => ({ 
+        label: lang === 'la' ? (v.nameLa || v.villageNameLa || v.nameEn || v.villageNameEn || v.id) : (v.nameEn || v.villageNameEn || v.nameLa || v.villageNameLa || v.id), 
+        value: v.id 
+      })) 
+    : [];
+
   const canProceed =
     data.firstName.trim() &&
     data.dateOfBirth &&
     data.district &&
     data.province &&
-    data.village.trim();
+    String(data.village).trim();
 
   return (
     <div className="min-h-dvh bg-gray-50">
@@ -156,7 +170,7 @@ export default function GeneralDetailsStep() {
               options={provinceOptions}
               value={data.province}
               onChange={(e) => {
-                updateData({ province: e.target.value, district: '' }); // Reset district when province changes
+                updateData({ province: e.target.value, district: '', village: '' }); // Reset district and village when province changes
               }}
               placeholder={loadingProvinces ? "Loading..." : "Select your Province"}
             />
@@ -166,18 +180,30 @@ export default function GeneralDetailsStep() {
               required
               options={districtOptions}
               value={data.district}
-              onChange={(e) => updateData({ district: e.target.value })}
+              onChange={(e) => updateData({ district: e.target.value, village: '' })} // Reset village when district changes
               placeholder={loadingCities ? "Loading..." : "Select your District"}
               disabled={!data.province}
             />
 
-            <Input
-              label="Village"
-              required
-              placeholder="Enter your Village"
-              value={data.village}
-              onChange={(e) => updateData({ village: e.target.value })}
-            />
+            {isLaos ? (
+              <Select
+                label="Village"
+                required
+                options={villageOptions}
+                value={data.village}
+                onChange={(e) => updateData({ village: e.target.value })}
+                placeholder={loadingVillages ? "Loading..." : "Select your Village"}
+                disabled={!data.district}
+              />
+            ) : (
+              <Input
+                label="Village"
+                required
+                placeholder="Enter your Village"
+                value={data.village}
+                onChange={(e) => updateData({ village: e.target.value })}
+              />
+            )}
 
           </section>
         </div>

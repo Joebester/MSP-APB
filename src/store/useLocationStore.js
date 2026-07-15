@@ -4,9 +4,11 @@ import api from '../utils/API';
 export const useLocationStore = create((set, get) => ({
   provinces: [],
   cities: [],
+  villages: [],
   prefixes: [],
   loadingProvinces: false,
   loadingCities: false,
+  loadingVillages: false,
   loadingPrefixes: false,
   error: null,
 
@@ -67,6 +69,28 @@ export const useLocationStore = create((set, get) => ({
       set({ error: err.message });
     } finally {
       set({ loadingPrefixes: false });
+    }
+  },
+
+  fetchVillages: async (cityId) => {
+    if (!cityId) {
+      set({ villages: [] });
+      return;
+    }
+    set({ loadingVillages: true, error: null, villages: [] });
+    try {
+      const response = await api.get(`/villages/${cityId}`);
+      if (response.data?.code === 200 || response.data?.success === true || response.data?.success === 'true') {
+        const data = response.data.data;
+        const list = Array.isArray(data) ? data : (data?.list || data?.items || data?.content || []);
+        set({ villages: list });
+      } else {
+        throw new Error(response.data?.message || 'Failed to fetch villages');
+      }
+    } catch (err) {
+      set({ error: err.message });
+    } finally {
+      set({ loadingVillages: false });
     }
   },
 }));
