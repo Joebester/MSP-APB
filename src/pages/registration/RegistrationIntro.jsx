@@ -19,7 +19,7 @@ export default function RegistrationIntro() {
   return (
     <GradientBackground>
       <div className="mx-auto flex min-h-dvh max-w-lg flex-col px-6 py-6 sm:px-8">
-        <div className="flex justify-end">
+        {/* <div className="flex justify-end">
           <button
             type="button"
             onClick={() => navigate(-1)}
@@ -28,7 +28,7 @@ export default function RegistrationIntro() {
           >
             <X className="h-6 w-6" />
           </button>
-        </div>
+        </div> */}
 
         <div className="mt-2 flex items-start justify-between gap-4">
           <div className="flex-1">
@@ -58,17 +58,17 @@ export default function RegistrationIntro() {
             variant="white"
             size="lg"
             className="w-full gap-1"
-            onClick={() => navigate('/register/policy?lang=' + localStorage.getItem("lang"))}
+            onClick={() => navigate('/policy?lang=' + localStorage.getItem("lang"))}
           >
             <Trans>Register Now</Trans> <span aria-hidden="true">&gt;</span>
           </Button>
-          <button
+          {/* <button
             type="button"
             onClick={() => navigate(-1)}
             className="w-full py-2 text-center text-sm font-medium text-white transition hover:text-white/80"
           >
             <Trans>Cancel</Trans>
-          </button>
+          </button> */}
         </div>
       </div>
     </GradientBackground>

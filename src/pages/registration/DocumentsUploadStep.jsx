@@ -114,8 +114,8 @@ export default function DocumentsUploadStep() {
         </div>
 
         <StepFooter
-          onBack={() => navigate('/register/kyc')}
-          onNext={() => navigate('/register/pin')}
+          onBack={() => navigate('/kyc')}
+          onNext={() => navigate('/pin')}
           nextDisabled={!canProceed}
         />
       </PageContainer>

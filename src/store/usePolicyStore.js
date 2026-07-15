@@ -19,7 +19,7 @@ export const usePolicyStore = create((set, get) => ({
       const data = response.data;
 
       const raw = data?.data;
-      console.log(raw)
+      // console.log(raw)
       const decrypted = await aesDecrypt(raw);
       const parsed = JSON.parse(decrypted);
       set({

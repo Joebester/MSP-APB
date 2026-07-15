@@ -17,7 +17,7 @@ export default function PolicyPage() {
 
   return (
     <div className="min-h-dvh bg-gray-50">
-      <AppHeader />
+      {/* <AppHeader /> */}
       <PageContainer>
         <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
           <h1 className="text-center text-xl font-bold text-gray-900 sm:text-2xl">
@@ -68,7 +68,7 @@ export default function PolicyPage() {
 
         <StepFooter
           onBack={() => navigate('/register?lang=' + localStorage.getItem("lang"))}
-          onNext={() => navigate('/register/verify?lang=' + localStorage.getItem("lang"))}
+          onNext={() => navigate('/verify?lang=' + localStorage.getItem("lang"))}
           nextDisabled={!agreed}
         />
       </PageContainer>

@@ -5,9 +5,23 @@ export function Select({
   required = false,
   options = [],
   placeholder = 'Select an option',
+  onSelect,
   className = '',
   ...props
 }) {
+  const handleChange = (e) => {
+    const val = e.target.value;
+    const match = options.find((o) => {
+      const optVal = typeof o === 'object' && o !== null ? o.value : o;
+      return String(optVal) === val;
+    });
+    const selectedLabel =
+      typeof match === 'object' && match !== null ? match.label : match;
+
+    onSelect?.({ value: val, label: selectedLabel ?? '' });
+    props.onChange?.(e); // still forward native onChange if provided
+  };
+
   return (
     <div className={`w-full ${className}`}>
       {label && (
@@ -20,15 +34,16 @@ export function Select({
         <select
           className="w-full appearance-none rounded-lg border border-gray-200 bg-gray-100 px-4 py-3 pr-10 text-sm text-gray-900 outline-none transition focus:border-msp-green focus:ring-2 focus:ring-msp-green/20"
           {...props}
+          onChange={handleChange}
         >
           <option value="">{placeholder}</option>
           {options.map((option) => {
             const isObject = typeof option === 'object' && option !== null;
             const val = isObject ? option.value : option;
-            const label = isObject ? option.label : option;
+            const optLabel = isObject ? option.label : option;
             return (
               <option key={String(val)} value={String(val)}>
-                {label}
+                {optLabel}
               </option>
             );
           })}

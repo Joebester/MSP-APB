@@ -1,7 +1,7 @@
 export function InfoRow({ label, value }) {
   return (
     <div className="flex items-start justify-between gap-4 py-2 text-sm">
-      <span className="shrink-0 text-gray-500">{label}</span>
+      <span className="shrink-0 text-gray-500">{label}:</span>
       <span className="text-right font-semibold text-gray-900">{value || '—'}</span>
     </div>
   );

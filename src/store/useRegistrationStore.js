@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import api from '../utils/API';
 import { aesEncrypt, aesDecrypt } from '../utils/crypto';
+import toast from 'react-hot-toast';
 
 export const useRegistrationStore = create((set) => ({
   submitting: false,
@@ -13,7 +14,7 @@ export const useRegistrationStore = create((set) => ({
       const timestamp = new Date().toISOString().replace('T', ' ').split('.')[0];
       const bodyData = {
         timestamp,
-        channel: 'MOBILE',
+        channel: "MSP-WEBVIEW",
         data: data,
       };
       const bodyJson = JSON.stringify(bodyData);
@@ -25,7 +26,16 @@ export const useRegistrationStore = create((set) => ({
         },
       });
 
-      if (response.data?.code === 200 || response.data?.success === true || response.data?.success === 'true') {
+      if (response.status === 200) {
+        if (response.data?.code === 200 && response.data?.success) {
+          toast.success(response.data?.message);
+          return true
+        } else {
+          toast.error(response.data?.message);
+          return false
+        }
+        console.log(response.data)
+        // toast.success(response.data?.header?.message || 'Failed to send OTP');
         return true;
       } else {
         throw new Error(response.data?.message || 'Failed to submit info');
@@ -44,6 +54,7 @@ export const useRegistrationStore = create((set) => ({
       const timestamp = new Date().toISOString().replace('T', ' ').split('.')[0];
       const bodyData = {
         timestamp,
+        channel: "MSP-WEBVIEW",
         data: { profileId, sendinfo: true, acceptcondition: true },
       };
       const bodyJson = JSON.stringify(bodyData);
@@ -55,9 +66,16 @@ export const useRegistrationStore = create((set) => ({
         },
       });
 
-      if (response.data?.code === 200 || response.data?.success === true || response.data?.success === 'true') {
-        return true;
+      if (response.status === 200) {
+        if (response.data?.code === 200) {
+          toast.success(response.data?.message)
+          return true
+        } else {
+          toast.error(response.data?.message)
+          return false
+        }
       } else {
+        toast.error(response.data?.message)
         throw new Error(response.data?.message || 'Failed to confirm registration');
       }
     } catch (err) {
