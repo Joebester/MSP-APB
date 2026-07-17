@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { StepFooter } from '../../components/layout/StepFooter';
 import { OnboardingHeader } from '../../components/registration/OnboardingHeader';
@@ -10,14 +11,60 @@ import { Trans } from 'react-i18next';
 export default function ConfirmSubmitStep() {
   const navigate = useNavigate();
   const { data } = useRegistration();
-  const { confirmRegistration, confirming } = useRegistrationStore();
+  const { confirmRegistration, confirming, uploadDocument, submitKyc } = useRegistrationStore();
+  const [submittingKyc, setSubmittingKyc] = useState(false);
+
+  const params = new URLSearchParams(window.location.search);
+  const isKycMode = params.get('type') === 'kyc';
+  const lang = params.get('lang') || localStorage.getItem('lang') || 'la';
 
   const handleConfirm = async () => {
-    const success = await confirmRegistration(data.profileId);
-    if (success) {
-      navigate('/success?lang=' + localStorage.getItem("lang"));
+    if (isKycMode) {
+      setSubmittingKyc(true);
+      const typeMap = {
+        passport: 1,
+        id_card: 2,
+        census: 3,
+      };
+      const typeId = typeMap[data.documentType] || 1;
+      const rfDocNo = data.documentNumber;
+      const exp = data.documentExpirationDate || '2030-12-31';
+
+      // 1. Upload Cover
+      const coverOk = await uploadDocument(data.docFile, typeId, rfDocNo, exp, 'COVER');
+      if (!coverOk) {
+        setSubmittingKyc(false);
+        return;
+      }
+
+      // 2. Upload Main (selfie/back)
+      const mainOk = await uploadDocument(data.selfieFile, typeId, rfDocNo, exp, 'MAIN');
+      if (!mainOk) {
+        setSubmittingKyc(false);
+        return;
+      }
+
+      // 3. Upload Video (if selected)
+      if (data.videoFile) {
+        await uploadDocument(data.videoFile, typeId, rfDocNo, exp, 'VIDEO');
+      }
+
+      // 4. Submit for review
+      const submitOk = await submitKyc();
+      setSubmittingKyc(false);
+
+      if (submitOk) {
+        navigate(`/success?type=kyc&lang=${lang}`);
+      }
+    } else {
+      const success = await confirmRegistration(data.profileId);
+      if (success) {
+        navigate('/success?lang=' + lang);
+      }
     }
   };
+
+  const isPending = confirming || submittingKyc;
 
   return (
     <div className="min-h-dvh bg-gray-50">
@@ -33,10 +80,10 @@ export default function ConfirmSubmitStep() {
         </div>
 
         <StepFooter
-          onBack={() => navigate('/confirm')}
+          onBack={() => navigate(isKycMode ? `/documents?lang=${lang}` : '/confirm')}
           onNext={handleConfirm}
-          nextLabel={confirming ? "Submitting..." : "Continue"}
-          nextDisabled={confirming}
+          nextLabel={isPending ? "Submitting..." : "Continue"}
+          nextDisabled={isPending}
         />
       </PageContainer>
     </div>

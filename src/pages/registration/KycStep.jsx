@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import { FileText, Sprout, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { KycOptionCard } from '../../components/registration/DocumentCaptureCard';
 import { useRegistration } from '../../context/RegistrationContext';
+import { Trans } from 'react-i18next';
 
 import Meporm_Icon from '../../assets/icons/ic_meporm.png';
 import Documents_Icon from '../../assets/icons/ic_doc.png';
@@ -30,10 +31,11 @@ export default function KycStep() {
 
   const handleSelect = (method) => {
     updateData({ kycMethod: method });
+    const lang = localStorage.getItem('lang') || 'la';
     if (method === 'meporm') {
-      navigate('/kyc/meporm');
+      navigate('/security-questions?type=meporm&lang=' + lang);
     } else {
-      navigate('/documents');
+      navigate('/documents?lang=' + lang);
     }
   };
 
@@ -56,24 +58,22 @@ export default function KycStep() {
 
           <img src={header_Icon} alt="KYC Header" className="mx-auto h-20 w-auto" />
 
-          <h1 className="mt-4 text-center text-2xl font-bold text-gray-900">KYC</h1>
+          <h1 className="mt-4 text-center text-2xl font-bold text-gray-900"><Trans>KYC</Trans></h1>
           <p className="mx-auto mt-4 max-w-sm text-center text-sm leading-relaxed text-gray-600">
-            The use of electronic wallet products requires proper user
-            authentication to identify the true owner of the wallet and comply
-            with MSP policies
+            <Trans>The use of electronic wallet products requires proper user authentication to identify the true owner of the wallet and comply with MSP policies</Trans>
           </p>
 
           <div className="mt-8 space-y-4">
             <KycOptionCard
               icon={<img src={Meporm_Icon} alt="Meporm Logo" className="h-10 w-auto" />}
-              title="Verify by APB Meporm"
-              subtitle="Reference your account APB Meporm already"
+              title={<Trans>Verify by APB Meporm</Trans>}
+              subtitle={<Trans>Reference your account APB Meporm already</Trans>}
               onClick={() => handleSelect('meporm')}
             />
             <KycOptionCard
               icon={<img src={Documents_Icon} alt="Documents Logo" className="h-10 w-auto" />}
-              title="Verify by Documents"
-              subtitle="Identity document, Census number, Passport"
+              title={<Trans>Verify by Documents</Trans>}
+              subtitle={<Trans>Identity document, Census number, Passport</Trans>}
               onClick={() => handleSelect('documents')}
             />
           </div>

@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { Camera, Globe, IdCard, Smartphone, X } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { GradientBackground } from '../../components/registration/GradientBackground';
@@ -15,6 +16,11 @@ const requirements = [
 
 export default function RegistrationIntro() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('register_profile');
+  }, []);
 
   return (
     <GradientBackground>

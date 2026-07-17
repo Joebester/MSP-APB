@@ -19,7 +19,7 @@ export default function VerifyStep() {
   const { data, updateData } = useRegistration();
   const { sending, sendError, sendSuccess, sendOtp, sendEmailOtp, countdown, verifying, verifyError, verifyOtp, verifyEmailOtp, message, otpBtnActive, emailBtnActive, verifySuccess } = useVerifyStore();
   const isLaos = data.country === 'laos';
-  console.log(data)
+
 
   const canProceed = isLaos
     ? data.phone.trim() && data.otp.trim()
@@ -139,7 +139,7 @@ export default function VerifyStep() {
                   )} */}
                 </div>
                 <div>
-                  {!data?.emailAlert && emailBtnActive ===false && <p className="mt-1.5 text-xs text-red-500">
+                  {!data?.emailAlert && emailBtnActive === false && <p className="mt-1.5 text-xs text-red-500">
                     <Trans>Please Enter Your Email</Trans>
                   </p>}
                 </div>
