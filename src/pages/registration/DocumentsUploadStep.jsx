@@ -65,7 +65,7 @@ export default function DocumentsUploadStep() {
   };
 
   const handleNext = () => {
-    navigate('/pin?lang=' + (localStorage.getItem('lang') || 'la'));
+    navigate('/review?type=kyc&lang=' + (localStorage.getItem('lang') || 'la'));
   };
 
   return (
