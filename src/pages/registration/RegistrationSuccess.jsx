@@ -6,19 +6,24 @@ import { Trans } from 'react-i18next';
 
 export default function RegistrationSuccess() {
   const navigate = useNavigate();
+  const search = window.location.search;
+  const isKyc = search.includes('type=kyc');
+  const isMeporm = search.includes('kyc=meporm');
+
+  const handleFinish = () => {
+    if (window.AndroidInterface?.closeWebview) {
+      window.AndroidInterface.closeWebview();
+    } else if (window.webkit?.messageHandlers?.closeWebview) {
+      window.webkit.messageHandlers.closeWebview.postMessage({});
+    } else {
+      navigate('/');
+    }
+  };
 
   return (
     <GradientBackground>
       <div className="mx-auto flex min-h-dvh max-w-lg flex-col px-6 py-6 sm:px-8">
         <div className="flex justify-end">
-          {/* <button
-            type="button"
-            onClick={() => navigate('/register')}
-            className="rounded-lg p-1 text-white transition hover:bg-white/10"
-            aria-label="Close"
-          >
-            <X className="h-6 w-6" />
-          </button> */}
         </div>
 
         <div className="flex flex-1 flex-col items-center justify-center text-center">
@@ -27,20 +32,36 @@ export default function RegistrationSuccess() {
           </div>
 
           <h1 className="mt-6 text-2xl font-bold text-white sm:text-3xl">
-            <Trans>Registration Successfully</Trans>
+            {isKyc ? (
+              isMeporm ? <Trans>Verification Successful</Trans> : <Trans>Documents Submitted</Trans>
+            ) : (
+              <Trans>Registration Successfully</Trans>
+            )}
           </h1>
 
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/90 sm:text-base">
-            <Trans>System may</Trans>
+            {isKyc ? (
+              isMeporm ? (
+                <Trans>Your identity has been verified via APB Meporm. Your eWallet is now active and ready to use.</Trans>
+              ) : (
+                <Trans>Your documents have been submitted for admin review. You will be notified once the verification is complete.</Trans>
+              )
+            ) : (
+              <Trans>System may</Trans>
+            )}
           </p>
 
-          <p className="mt-8 text-sm text-white"><Trans>Contact the nearby service center</Trans></p>
-          <a
-            href="#location"
-            className="mt-1 text-sm font-bold text-white underline"
-          >
-            <Trans>Location</Trans> &gt;&gt;
-          </a>
+          {!isKyc && (
+            <>
+              <p className="mt-8 text-sm text-white"><Trans>Contact the nearby service center</Trans></p>
+              <a
+                href="#location"
+                className="mt-1 text-sm font-bold text-white underline"
+              >
+                <Trans>Location</Trans> &gt;&gt;
+              </a>
+            </>
+          )}
 
           <MessageCircle
             className="mt-6 h-10 w-10 text-msp-neon"
@@ -52,10 +73,11 @@ export default function RegistrationSuccess() {
           <Button
             variant="white"
             size="lg"
-            className="w-full gap-1"
-            onClick={() => navigate('/')}
+            className="w-full gap-1 font-bold text-teal-800"
+            onClick={handleFinish}
           >
-            <Trans>Let&apos;s Start</Trans> <span aria-hidden="true">&gt;</span>
+            {isKyc ? <Trans>Done</Trans> : <Trans>Let&apos;s Start</Trans>}{' '}
+            <span aria-hidden="true">&gt;</span>
           </Button>
         </div>
       </div>

@@ -8,10 +8,13 @@ import { OnboardingHeader } from '../../components/registration/OnboardingHeader
 import { StepIndicator } from '../../components/registration/StepIndicator';
 import { DOCUMENT_TYPES } from '../../constants/registration';
 import { useRegistration } from '../../context/RegistrationContext';
+import { useTranslation, Trans } from 'react-i18next';
 
 export default function DocumentsUploadStep() {
   const navigate = useNavigate();
   const { data, updateData } = useRegistration();
+  const { t } = useTranslation();
+
   const docConfig = DOCUMENT_TYPES[data.documentType] || DOCUMENT_TYPES.passport;
 
   const requiredFieldsFilled = docConfig.fields
@@ -20,9 +23,9 @@ export default function DocumentsUploadStep() {
 
   const canProceed =
     requiredFieldsFilled &&
-    data.documentPhotoTaken &&
-    data.selfiePhotoTaken &&
-    data.videoShortTaken;
+    data.docFile &&
+    data.selfieFile &&
+    data.videoFile;
 
   const handleDocTypeChange = (e) => {
     updateData({
@@ -33,22 +36,50 @@ export default function DocumentsUploadStep() {
       documentPhotoTaken: false,
       selfiePhotoTaken: false,
       videoShortTaken: false,
+      docFile: null,
+      selfieFile: null,
+      videoFile: null,
     });
+  };
+
+  const handleDocFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      updateData({ docFile: file, documentPhotoTaken: true });
+    }
+  };
+
+  const handleSelfieFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      updateData({ selfieFile: file, selfiePhotoTaken: true });
+    }
+  };
+
+  const handleVideoFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      updateData({ videoFile: file, videoShortTaken: true });
+    }
+  };
+
+  const handleNext = () => {
+    navigate('/review?type=kyc&lang=' + (localStorage.getItem('lang') || 'la'));
   };
 
   return (
     <div className="min-h-dvh bg-gray-50">
       <PageContainer>
         <OnboardingHeader />
-        <StepIndicator step={3} totalSteps={4} label="Documents Upload" />
+        <StepIndicator step={3} totalSteps={4} label={t("Documents Upload")} />
 
         <div className="flex-1 space-y-6 overflow-y-auto px-4 pb-6 sm:px-6">
           <section className="space-y-4">
-            <h2 className="text-base font-bold text-gray-900">Document details</h2>
+            <h2 className="text-base font-bold text-gray-900"><Trans>Document details</Trans></h2>
 
             <div>
               <label className="mb-1.5 block text-sm font-semibold text-gray-900">
-                Select type document<span className="text-red-500">*</span>
+                <Trans>Select type document</Trans><span className="text-red-500">*</span>
               </label>
               <div className="relative">
                 <select
@@ -58,7 +89,7 @@ export default function DocumentsUploadStep() {
                 >
                   {Object.entries(DOCUMENT_TYPES).map(([key, config]) => (
                     <option key={key} value={key}>
-                      {config.label}
+                      {t(config.label)}
                     </option>
                   ))}
                 </select>
@@ -72,50 +103,66 @@ export default function DocumentsUploadStep() {
             {docConfig.fields.map((field) => (
               <Input
                 key={field.key}
-                label={field.label}
+                label={t(field.label)}
                 required={field.required}
-                placeholder={field.placeholder}
-                value={data[field.key]}
+                placeholder={t(field.placeholder)}
+                value={data[field.key] || ''}
                 onChange={(e) => updateData({ [field.key]: e.target.value })}
               />
             ))}
           </section>
 
+          <input
+            id="doc-file-input"
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleDocFileChange}
+          />
+          <input
+            id="selfie-file-input"
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleSelfieFileChange}
+          />
+          <input
+            id="video-file-input"
+            type="file"
+            accept="video/*,image/*"
+            className="hidden"
+            onChange={handleVideoFileChange}
+          />
+
           <DocumentCaptureCard
-            title="Upload document"
+            title={t("Upload document")}
             variant="document"
-            completed={data.documentPhotoTaken}
-            onCapture={() =>
-              updateData({ documentPhotoTaken: !data.documentPhotoTaken })
-            }
+            completed={!!data.docFile}
+            onCapture={() => document.getElementById('doc-file-input').click()}
           />
 
           <DocumentCaptureCard
-            title="Take photo with document"
-            instruction="Take a selfie holding your passport open to the photo page"
+            title={t("Take photo with document")}
+            instruction={t("Take selfie holding your passport open to the photo page")}
             variant="selfie"
-            completed={data.selfiePhotoTaken}
-            onCapture={() =>
-              updateData({ selfiePhotoTaken: !data.selfiePhotoTaken })
-            }
+            completed={!!data.selfieFile}
+            onCapture={() => document.getElementById('selfie-file-input').click()}
           />
 
           <DocumentCaptureCard
-            title="Take video shorts"
-            instruction="Take a video shorts holding your document"
+            title={t("Take video shorts")}
+            instruction={t("Take a video shorts holding your document")}
             variant="selfie"
-            actionLabel="Take Video"
+            actionLabel={t("Take Video")}
             actionType="video"
-            completed={data.videoShortTaken}
-            onCapture={() =>
-              updateData({ videoShortTaken: !data.videoShortTaken })
-            }
+            completed={!!data.videoFile}
+            onCapture={() => document.getElementById('video-file-input').click()}
           />
         </div>
 
         <StepFooter
           onBack={() => navigate('/kyc')}
-          onNext={() => navigate('/pin')}
+          onNext={handleNext}
           nextDisabled={!canProceed}
         />
       </PageContainer>

@@ -9,11 +9,15 @@ const api = axios.create({
   }
 });
 
-// Request interceptor to automatically attach language header
+// Request interceptor to automatically attach language and authorization header
 api.interceptors.request.use(
   (config) => {
     const lang = localStorage.getItem('lang') === "la" ? 'LO': 'EN';
     config.headers['langCode'] = lang;
+    const token = localStorage.getItem('access_token');
+    if (token && token !== 'null' && token !== 'undefined') {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => {
