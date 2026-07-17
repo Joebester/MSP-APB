@@ -40,6 +40,7 @@ export const DISTRICTS = [
 
 export const DOCUMENT_TYPES = {
   passport: {
+    typeId: 1,
     label: 'Passport',
     fields: [
       {
@@ -63,6 +64,7 @@ export const DOCUMENT_TYPES = {
     ],
   },
   id_card: {
+    typeId: 2,
     label: 'ID Card',
     fields: [
       {
@@ -80,6 +82,7 @@ export const DOCUMENT_TYPES = {
     ],
   },
   census: {
+    typeId: 3,
     label: 'Census Number',
     fields: [
       {

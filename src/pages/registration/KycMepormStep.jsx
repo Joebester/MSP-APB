@@ -53,7 +53,7 @@ export default function KycMepormStep() {
             <ArrowLeftRight className="h-5 w-5 text-gray-800" />
             {/* <MepormLogo /> */}
             <img src={Meporm_Icon} alt="Meporm Logo" className="h-14 w-auto" />
-            
+
           </div>
 
           <h1 className="mt-6 text-center text-lg font-bold text-gray-900">

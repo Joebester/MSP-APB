@@ -1,12 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { AppHeader } from '../../components/layout/AppHeader';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { StepFooter } from '../../components/layout/StepFooter';
 import { Checkbox } from '../../components/ui/Checkbox';
 import { InfoRow, InfoSection } from '../../components/registration/InfoRow';
 import { useRegistration } from '../../context/RegistrationContext';
 import { useRegistrationStore } from '../../store/useRegistrationStore';
-import { aesDecrypt, aesEncrypt } from '../../utils/crypto';
+import { aesEncrypt } from '../../utils/crypto';
 import { Trans } from 'react-i18next';
 import toast from 'react-hot-toast';
 
@@ -25,26 +24,21 @@ export default function ConfirmRegistration() {
   const { data, updateData, fullName } = useRegistration();
   const { submitInfo, submitting } = useRegistrationStore();
 
-  const stored = localStorage.getItem('register_profile'); // '"71A8...:4E2C..."'
-  const raw = JSON.parse(stored); // → "71A8...:4E2C..." (quotes removed)
-  const u_id = aesDecrypt(raw);
-
   const lang = localStorage.getItem('lang') || 'la';
-
-  const contactValue = data.country === 'laos' ? data.phone : data.email;
+  const isLaos = data.country === 'laos';
+  const contactValue = isLaos ? data.phone : data.email;
 
   const handleRegister = async () => {
-    console.log(JSON.stringify(data))
-    let passwordEncrypt = aesEncrypt(data.pin)
-    let signupData = {
-      profileId: u_id,
+    const passwordEncrypt = aesEncrypt(data.pin);
+    const signupData = {
+      profileId: data.profileId || null,
       prefixCode: data.title,
       firstNameLa: data.firstName,
-      middleNameLa: data.MiddleName || '',
+      middleNameLa: data.MidleName || '',
       lastNameLa: data.lastName,
-      firstNameEn: data.firstName,
-      middleNameEn: data.MiddleName || '',
-      lastNameEn: data.lastName,
+      firstNameEn: isLaos ? data.firstNameEn : data.firstName,
+      middleNameEn: isLaos ? (data.MidleNameEn || '') : (data.MidleName || ''),
+      lastNameEn: isLaos ? data.lastNameEn : data.lastName,
       birthday: data.dateOfBirth,
       tel: data.phone,
       email: data.email,
@@ -52,10 +46,10 @@ export default function ConfirmRegistration() {
       latitude: 0,
       longitude: 0,
       password: passwordEncrypt,
-      confirmPassword: passwordEncrypt,
-      customerType: 'FRN',
+      confirmPassword: aesEncrypt(data.confirmPin),
+      customerType: isLaos ? 'LA' : 'FRN',
       addresses: {
-        profileId: u_id,
+        profileId: data.profileId || null,
         addressType: 'CURRENT',
         roadLineOne: '1',
         roadLineTwo: '2',
@@ -79,84 +73,7 @@ export default function ConfirmRegistration() {
         deviceInfo: navigator.userAgent || '',
         pushToken: '',
       },
-
-    }
-
-    if (data.country === "laos") {
-
-      signupData = {
-        profileId: u_id,
-        prefixCode: data.title,
-        firstNameLa: data.firstName,
-        middleNameLa: data.MiddleName || '',
-        lastNameLa: data.lastName,
-        firstNameEn: data.firstNameEn,
-        middleNameEn: data.MiddleNameEn || '',
-        lastNameEn: data.lastNameEn,
-        birthday: data.dateOfBirth,
-        tel: data.phone,
-        email: data.email,
-        occupation: data.occupation || '',
-        latitude: 0,
-        longitude: 0,
-        password: passwordEncrypt,
-        confirmPassword: passwordEncrypt,
-        addresses: {
-          profileId: u_id,
-          addressType: 'CURRENT',
-          roadLineOne: '1',
-          roadLineTwo: '2',
-          provinceId: parseInt(data.province, 10),
-          cityId: parseInt(data.district, 10),
-          village: data.village,
-        },
-        device: {
-          deviceId: crypto.randomUUID?.() || 'DEV-' + Date.now(),
-          deviceName: navigator.platform || '',
-          deviceOS: /iPhone|iPad|iPod/.test(navigator.userAgent)
-            ? 'ios'
-            : /Android/.test(navigator.userAgent)
-              ? 'android'
-              : 'web',
-          deviceModelName: '',
-          deviceModelNumber: '',
-          deviceIMEI: '',
-          deviceMEID: '',
-          deviceSEID: '',
-          deviceInfo: navigator.userAgent || '',
-          pushToken: '',
-        },
-        customerType: 'LA',
-      };
-    }
-
-
-    // const signupData = {
-    //   profileId: u_id,
-    //   prefixCode: data.title,
-    //   firstNameEn: data.firstName,
-    //   firstNameLa: data.firstName,
-    //   lastNameEn: data.lastName,
-    //   lastNameLa: data.lastName,
-    //   birthday: data.dateOfBirth,
-    //   tel: data.phone,
-    //   email: data.email,
-    //   password: aesEncrypt(data.pin),
-    //   confirmPassword: aesEncrypt(data.pin),
-    //   addresses: [{
-    //     provinceId: parseInt(data.province, 10),
-    //     cityId: parseInt(data.district, 10),
-    //     village: data.village,
-    //   }],
-    //   documentType: data.documentType,
-    //   documentNumber: data.documentNumber,
-    //   documentIssueDate: data.documentIssueDate,
-    //   documentExpirationDate: data.documentExpirationDate,
-    //   kycMethod: data.kycMethod,
-    //   securityAnswers: data.securityAnswers,
-    //   customerCode: data.customerCode,
-    // };
-    console.log(signupData)
+    };
 
     const success = await submitInfo(signupData);
 
@@ -167,7 +84,6 @@ export default function ConfirmRegistration() {
 
   return (
     <div className="min-h-dvh bg-gray-50">
-      {/* <AppHeader /> */}
       <PageContainer>
         <div className="px-4 py-6 sm:px-6">
           <h1 className="text-xl font-bold text-gray-900"><Trans>Register</Trans></h1>
@@ -182,7 +98,7 @@ export default function ConfirmRegistration() {
             <InfoSection title={<Trans>Applicant details</Trans>}>
               <InfoRow label={<Trans>Full name</Trans>} value={fullName} />
               <InfoRow
-                label={data.country === 'laos' ? <Trans>Phone number</Trans> : <Trans>Email</Trans>}
+                label={isLaos ? <Trans>Phone number</Trans> : <Trans>Email</Trans>}
                 value={contactValue}
               />
               <InfoRow label={<Trans>Date of Birth</Trans>} value={formatDate(data.dateOfBirth)} />
@@ -200,9 +116,7 @@ export default function ConfirmRegistration() {
           <div className="flex justify-center">
             <Checkbox
               checked={data.confirmTermsAccepted}
-              onChange={(e) =>
-                updateData({ confirmTermsAccepted: e.target.checked })
-              }
+              onChange={(e) => updateData({ confirmTermsAccepted: e.target.checked })}
               label={
                 <span className="text-sm text-gray-900">
                   <Trans>Accept all terms</Trans>,{' '}

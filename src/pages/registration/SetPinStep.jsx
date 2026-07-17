@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AppHeader } from '../../components/layout/AppHeader';
+// import { AppHeader } from '../../components/layout/AppHeader';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { PinHeader, PinIndicators } from '../../components/registration/PinDisplay';
 import { PinKeypad } from '../../components/registration/PinKeypad';
@@ -15,11 +15,11 @@ export default function SetPinStep() {
   const lang = localStorage.getItem('lang') || 'la';
 
   useEffect(() => {
-    
-    
+
+
     if (isComplete) {
       updateData({ pin });
-      const timer = setTimeout(() => navigate('/terms?lang=' + lang), 400);
+      const timer = setTimeout(() => navigate('/confirm-pin?lang=' + lang), 400);
       return () => clearTimeout(timer);
     }
   }, [isComplete, pin, updateData, navigate]);

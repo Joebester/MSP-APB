@@ -81,13 +81,12 @@ export const useVerifyStore = create((set) => ({
         response.data?.success === 'true';
 
       if (ok) {
-        const profile = response.data?.data;
-        let decrypt = aesDecrypt(profile)
-        let allData = JSON.parse(decrypt)
-        let u_profile = aesEncrypt(JSON.stringify(allData?.profileId))
-        localStorage.setItem('register_profile', JSON.stringify(u_profile ?? {}));
+        const raw = response.data?.data;
         set({ verifySuccess: true });
-        return profile || true; // component navigates on truthy return
+        if (raw && typeof raw === 'string' && raw.includes(':')) {
+          return JSON.parse(aesDecrypt(raw)); // includes profileId — caller stores it via updateData
+        }
+        return raw || true;
       } else {
         const msg = response.data?.message || 'OTP verification failed';
         set({ verifyError: msg, verifySuccess: false });
@@ -117,21 +116,26 @@ export const useVerifyStore = create((set) => ({
       const emailBodyEncrypt = aesEncrypt(JSON.stringify(emailBody));
 
       const response = await api.post('/email/request', emailBody, {
-        headers: { 'X-MSP-DATA-Signature': emailBodyEncrypt },
+        headers: {
+          langCode: localStorage.getItem('lang') || 'la',
+          'X-MSP-DATA-Signature': emailBodyEncrypt,
+        },
       });
 
-      if (response.status === 200 && response.data?.header?.code === '0000') {
+      const headerCode = response.data?.header?.code;
+      if (headerCode === '0000' || headerCode === '00' || response.data?.code === 200 || response.data?.success === true) {
         set({ sendSuccess: true, emailBtnActive: true });
-        toast.success(response.data?.header?.message || 'OTP sent successfully');
+        toast.success(response.data?.header?.message || response.data?.message || 'OTP sent successfully');
       } else {
         set({ sendSuccess: false, emailBtnActive: false });
-        toast.error(response.data?.header?.message || 'Failed to send OTP');
+        toast.error(response.data?.header?.message || response.data?.message || 'Failed to send OTP');
       }
       startCountdown(20);
     } catch (err) {
       console.error('sendEmailOtp error:', err);
       const errorMessage =
         err.response?.data?.header?.message ||
+        err.response?.data?.message ||
         err.message ||
         'Failed to send OTP. Please check the network';
       toast.error(errorMessage);
@@ -148,25 +152,29 @@ export const useVerifyStore = create((set) => ({
       const otpEmailBodyEncrypt = aesEncrypt(JSON.stringify(otpEmailBody));
 
       const response = await api.post('/email/verify', otpEmailBody, {
-        headers: { 'X-MSP-DATA-Signature': otpEmailBodyEncrypt },
+        headers: {
+          langCode: localStorage.getItem('lang') || 'la',
+          'X-MSP-DATA-Signature': otpEmailBodyEncrypt,
+        },
       });
 
-      if (response.status === 200 && response.data?.header?.code === '0000') {
+      const headerCode = response.data?.header?.code;
+      if (headerCode === '0000' || headerCode === '00' || response.data?.code === 200) {
         set({ verifySuccess: true });
-        console.log(response?.data?.body?.profileId)
-        let u_profile = aesEncrypt(JSON.stringify(response?.data?.body?.profileId))
-        localStorage.setItem('register_profile', JSON.stringify(u_profile ?? {}));
         toast.success(response.data?.header?.message || 'OTP verified successfully');
-        return true; // component navigates
+        return response.data?.body || true; // body includes profileId — caller stores it via updateData
       } else {
         set({ verifySuccess: false });
-        toast.error(response.data?.header?.message || 'OTP verification failed');
+        toast.error(response.data?.header?.message || response.data?.message || 'OTP verification failed');
         return false;
       }
     } catch (err) {
       console.error('verifyEmailOtp error:', err);
       const errorMessage =
-        err.response?.data?.message || err.message || 'OTP verification failed';
+        err.response?.data?.header?.message ||
+        err.response?.data?.message ||
+        err.message ||
+        'OTP verification failed';
       toast.error(errorMessage);
       set({ verifyError: errorMessage });
       return false;

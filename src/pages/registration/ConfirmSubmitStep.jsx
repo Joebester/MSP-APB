@@ -6,20 +6,14 @@ import { StepIndicator } from '../../components/registration/StepIndicator';
 import { useRegistration } from '../../context/RegistrationContext';
 import { useRegistrationStore } from '../../store/useRegistrationStore';
 import { Trans } from 'react-i18next';
-import { aesDecrypt } from '../../utils/crypto';
 
 export default function ConfirmSubmitStep() {
   const navigate = useNavigate();
   const { data } = useRegistration();
   const { confirmRegistration, confirming } = useRegistrationStore();
 
-  const stored = localStorage.getItem('register_profile'); // '"71A8...:4E2C..."'
-  const raw = JSON.parse(stored); // → "71A8...:4E2C..." (quotes removed)
-  const u_id = aesDecrypt(raw);
-
   const handleConfirm = async () => {
-
-    const success = await confirmRegistration(u_id);
+    const success = await confirmRegistration(data.profileId);
     if (success) {
       navigate('/success?lang=' + localStorage.getItem("lang"));
     }

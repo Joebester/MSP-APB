@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AppHeader } from '../../components/layout/AppHeader';
+// import { AppHeader } from '../../components/layout/AppHeader';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { StepFooter } from '../../components/layout/StepFooter';
 import { Checkbox } from '../../components/ui/Checkbox';
@@ -67,7 +67,7 @@ export default function PolicyPage() {
         </div>
 
         <StepFooter
-          onBack={() => navigate('/register?lang=' + localStorage.getItem("lang"))}
+          onBack={() => navigate('/?lang=' + localStorage.getItem("lang"))}
           onNext={() => navigate('/verify?lang=' + localStorage.getItem("lang"))}
           nextDisabled={!agreed}
         />

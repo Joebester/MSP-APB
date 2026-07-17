@@ -10,16 +10,23 @@ const defaultState = {
   emailOtp: '',
   title: 'Mr',
   firstName: '',
+  middleName: '',
   lastName: '',
   MidleName: '',
-  firstNameEn: '',
-  lastNameEn: '',
   MidleNameEn: '',
+  firstNameLa: '',
+  firstNameEn: '',
+  middleNameLa: '',
+  middleNameEn: '',
+  lastNameLa: '',
+  lastNameEn: '',
   occupation: '',
   dateOfBirth: dayjs().subtract(20, 'year').format('YYYY-MM-DD'),
   district: '',
   province: '',
   village: '',
+  roadLineOne: '',
+  roadLineTwo: '',
   kycMethod: '',
   documentType: 'passport',
   documentNumber: '',
@@ -31,6 +38,7 @@ const defaultState = {
   securityAnswers: ['', '', ''],
   customerCode: 'US00001234638',
   pin: '',
+  confirmPin: '',
   termsAccepted: false,
   confirmTermsAccepted: false,
   otpActive: false,
@@ -147,9 +155,9 @@ export function RegistrationProvider({ children }) {
 
 
   const fullName = useMemo(() => {
-    const parts = [data.title, data.firstName, data.lastName].filter(Boolean);
+    const parts = [data.title, data.firstName, data.middleName, data.lastName].filter(Boolean);
     return parts.join(' ').toUpperCase();
-  }, [data.title, data.firstName, data.lastName]);
+  }, [data.title, data.firstName, data.middleName, data.lastName]);
 
   const value = useMemo(
     () => ({

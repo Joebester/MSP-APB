@@ -24,7 +24,7 @@ export default function SecurityQuestionsStep() {
         <div className="flex justify-end px-4 pt-4 sm:px-6">
           <button
             type="button"
-            onClick={() => navigate('/pin')}
+            onClick={() => navigate('/confirm-pin')}
             className="rounded-lg p-1 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
             aria-label="Close"
           >
@@ -56,7 +56,7 @@ export default function SecurityQuestionsStep() {
         </div>
 
         <StepFooter
-          onBack={() => navigate('/pin')}
+          onBack={() => navigate('/confirm-pin')}
           onNext={() => navigate('/terms')}
           nextDisabled={!canProceed}
         />

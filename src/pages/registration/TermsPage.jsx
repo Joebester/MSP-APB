@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { AppHeader } from '../../components/layout/AppHeader';
+// import { AppHeader } from '../../components/layout/AppHeader';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { StepFooter } from '../../components/layout/StepFooter';
 import { Checkbox } from '../../components/ui/Checkbox';
