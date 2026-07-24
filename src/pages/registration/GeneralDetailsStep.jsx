@@ -74,7 +74,7 @@ export default function GeneralDetailsStep() {
     <div className="min-h-dvh bg-gray-50">
       {/* <AppHeader /> */}
       <PageContainer>
-        <OnboardingHeader />
+        <OnboardingHeader onBack={() => navigate('/verify?lang=' + lang)} />
         <StepIndicator step={2} totalSteps={4} label={<Trans>General Details</Trans>} />
 
         <div className="flex-1 space-y-8 px-4 pb-6 sm:px-6">

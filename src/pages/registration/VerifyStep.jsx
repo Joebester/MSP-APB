@@ -31,12 +31,12 @@ export default function VerifyStep() {
       {/* <AppHeader /> */}
       <PageContainer>
         <OnboardingHeader />
-        <Button
+        {/* <Button
           className="absolute right-3 top-6.5"
           onClick={() => navigate('/kyc')}
         >
           <Trans>KYC</Trans>
-        </Button>
+        </Button> */}
         <StepIndicator step={1} totalSteps={4} label={<Trans>Verify</Trans>} />
 
         <div className="flex-1 space-y-6 px-4 pb-6 sm:px-6">

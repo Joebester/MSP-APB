@@ -43,27 +43,6 @@ export default function DocumentsUploadStep() {
     });
   };
 
-  const handleDocFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      updateData({ docFile: file, documentPhotoTaken: true });
-    }
-  };
-
-  const handleSelfieFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      updateData({ selfieFile: file, selfiePhotoTaken: true });
-    }
-  };
-
-  const handleVideoFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      updateData({ videoFile: file, videoShortTaken: true });
-    }
-  };
-
   const handleNext = () => {
     navigate('/review?type=kyc&lang=' + (localStorage.getItem('lang') || 'la'));
   };
@@ -71,9 +50,8 @@ export default function DocumentsUploadStep() {
   return (
     <div className="min-h-dvh bg-gray-50">
       <PageContainer>
-        <OnboardingHeader />
+        <OnboardingHeader onBack={() => navigate('/kyc')} />
         <StepIndicator step={3} totalSteps={4} label={t("Documents Upload")} />
-
         <div className="flex-1 space-y-6 overflow-y-auto px-4 pb-6 sm:px-6">
           <section className="space-y-4">
             <h2 className="text-base font-bold text-gray-900"><Trans>Document details</Trans></h2>
@@ -123,33 +101,11 @@ export default function DocumentsUploadStep() {
             )}
           </section>
 
-          <input
-            id="doc-file-input"
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handleDocFileChange}
-          />
-          <input
-            id="selfie-file-input"
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handleSelfieFileChange}
-          />
-          <input
-            id="video-file-input"
-            type="file"
-            accept="video/*,image/*"
-            className="hidden"
-            onChange={handleVideoFileChange}
-          />
-
           <DocumentCaptureCard
             title={t("Upload document")}
             variant="document"
             completed={!!data.docFile}
-            onCapture={() => document.getElementById('doc-file-input').click()}
+            onCapture={(file) => updateData({ docFile: file, documentPhotoTaken: true })}
           />
 
           <DocumentCaptureCard
@@ -157,7 +113,7 @@ export default function DocumentsUploadStep() {
             instruction={t("Take selfie holding your passport open to the photo page")}
             variant="selfie"
             completed={!!data.selfieFile}
-            onCapture={() => document.getElementById('selfie-file-input').click()}
+            onCapture={(file) => updateData({ selfieFile: file, selfiePhotoTaken: true })}
           />
 
           <DocumentCaptureCard
@@ -167,7 +123,7 @@ export default function DocumentsUploadStep() {
             actionLabel={t("Take Video")}
             actionType="video"
             completed={!!data.videoFile}
-            onCapture={() => document.getElementById('video-file-input').click()}
+            onCapture={(file) => updateData({ videoFile: file, videoShortTaken: true })}
           />
         </div>
 

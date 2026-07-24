@@ -1,5 +1,7 @@
 import { useRef } from 'react';
 import { Camera, CheckCircle2, Video } from 'lucide-react';
+import photo_kyc from '../../assets/icons/ic_kyc_1.png';
+import video_kyc from '../../assets/icons/ic_kyc_2.png';
 
 export function DocumentCaptureCard({
   title,
@@ -17,7 +19,6 @@ export function DocumentCaptureCard({
     if (file) {
       onCapture(file);
     }
-    // เคลียร์ value ทุกครั้ง เผื่อ user เลือกไฟล์เดิมซ้ำแล้ว onChange ไม่ยิง
     e.target.value = '';
   };
 
@@ -45,13 +46,15 @@ export function DocumentCaptureCard({
         onChange={handleFileChange}
         className="hidden"
       />
+      
+      <img src={isVideo ? video_kyc : photo_kyc} alt="KYC" className="mx-auto mt-4 h-32 w-auto" />
 
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
         className={`mt-3 flex w-full items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-semibold transition ${
           completed
-            ? 'border-msp-green/30 bg-msp-green/5 text-msp-green'
+            ? 'border-msp-green/200 bg-msp-green/10 text-msp-green'
             : 'border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-100'
         }`}
       >
@@ -62,7 +65,6 @@ export function DocumentCaptureCard({
   );
 }
 
-// ใช้ในหน้า KycStep สำหรับ card เลือก pathway (ของเดิมที่ import อยู่แล้ว)
 export function KycOptionCard({ icon, title, subtitle, onClick }) {
   return (
     <button

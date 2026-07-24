@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 
 const CURRENT_YEAR = new Date().getFullYear();
-const YEARS = Array.from({ length: CURRENT_YEAR - 1900 + 1 }, (_, i) => 1900 + i).reverse();
+const MAX_YEAR = CURRENT_YEAR + 50;
+const YEARS = Array.from({ length: MAX_YEAR - 1900 + 1 }, (_, i) => 1900 + i).reverse();
 
 function getDaysInMonth(month, year) {
   if (!month || !year) return 31;
@@ -86,10 +87,11 @@ function ScrollColumn({ items, value, onChange, formatLabel }) {
 }
 
 export function DatePicker({ value, onChange, label, required }) {
+  const today = new Date();
   const [open, setOpen] = useState(false);
-  const [day, setDay] = useState(null);
-  const [month, setMonth] = useState(null);
-  const [year, setYear] = useState(null);
+  const [day, setDay] = useState(today.getDate());
+  const [month, setMonth] = useState(today.getMonth() + 1);
+  const [year, setYear] = useState(today.getFullYear());
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const wrapperRef = useRef(null);
@@ -160,7 +162,7 @@ export function DatePicker({ value, onChange, label, required }) {
       if (
         dNum >= 1 && dNum <= 31 &&
         mNum >= 1 && mNum <= 12 &&
-        yNum >= 1900 && yNum <= CURRENT_YEAR
+        yNum >= 1900 && yNum <= MAX_YEAR
       ) {
         setDay(dNum);
         setMonth(mNum);
