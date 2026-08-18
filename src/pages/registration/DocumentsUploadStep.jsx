@@ -105,6 +105,7 @@ export default function DocumentsUploadStep() {
             title={t("Upload document")}
             variant="document"
             completed={!!data.docFile}
+            browseLabel={t("Choose photo")}
             onCapture={(file) => updateData({ docFile: file, documentPhotoTaken: true })}
           />
 
@@ -113,6 +114,7 @@ export default function DocumentsUploadStep() {
             instruction={t("Take selfie holding your passport open to the photo page")}
             variant="selfie"
             completed={!!data.selfieFile}
+            browseLabel={t("Choose photo")}
             onCapture={(file) => updateData({ selfieFile: file, selfiePhotoTaken: true })}
           />
 
@@ -123,6 +125,7 @@ export default function DocumentsUploadStep() {
             actionLabel={t("Take Video")}
             actionType="video"
             completed={!!data.videoFile}
+            browseLabel={t("Choose video")}
             onCapture={(file) => updateData({ videoFile: file, videoShortTaken: true })}
           />
         </div>

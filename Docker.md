@@ -9,20 +9,20 @@ npm run preview
 
 ```bash
 # MacOS Command build and push
-docker build --platform linux/amd64 -t apb.registry-img.com/app-uat/msp-register-kyc-ui:v1.0.3 .
-docker push apb.registry-img.com/app-uat/msp-register-kyc-ui:v1.0.3
+docker build --platform linux/amd64 -t apb.registry-img.com/app-uat/msp-register-kyc-ui:v1.0.5 .
+docker push apb.registry-img.com/app-uat/msp-register-kyc-ui:v1.0.5
 ```
 
 
 ```bash
 # Windows Command build and push
-docker build -t apb.registry-img.com/app-uat/msp-register-kyc-ui:v1.0.3 .
-docker push apb.registry-img.com/app-uat/msp-register-kyc-ui:v1.0.3
+docker build -t apb.registry-img.com/app-uat/msp-register-kyc-ui:v1.0.5 .
+docker push apb.registry-img.com/app-uat/msp-register-kyc-ui:v1.0.5
 ```
 
 
 ```bash
-docker run --platform linux/amd64 -p 7195:80 apb.registry-img.com/app-uat/msp-register-kyc-ui:v1.0.3
+docker run --platform linux/amd64 -p 7195:80 apb.registry-img.com/app-uat/msp-register-kyc-ui:v1.0.5
 ```
 
 > `exec format error` usually means the image CPU architecture does not match the target host platform. Build with `--platform linux/amd64` from Apple Silicon machines.
