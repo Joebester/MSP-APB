@@ -24,8 +24,11 @@ export default function KycCheckPage() {
       if (cancelled) return;
 
       if (result) {
-        if (result.verifiedDoc && result.verifiedQt) {
-          // KYC already verified — show thank you
+        const isDocVerified = result.verifiedDoc === true || result.verifiedDoc === 'true';
+        const isQtVerified = result.verifiedQt === true || result.verifiedQt === 'true';
+
+        if (isDocVerified && isQtVerified) {
+          // KYC already verified — show thank you page with complete button
           setKycComplete(true);
           setChecked(true);
         } else {
