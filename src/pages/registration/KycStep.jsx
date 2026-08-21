@@ -21,7 +21,7 @@ export default function KycStep() {
   const navigate = useNavigate();
   const { updateData } = useRegistration();
 
-  alert(window.location.href)
+  // alert(window.location.href)
 
   const handleSelect = (method) => {
     updateData({ kycMethod: method });
