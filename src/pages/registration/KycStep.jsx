@@ -21,6 +21,8 @@ export default function KycStep() {
   const navigate = useNavigate();
   const { updateData } = useRegistration();
 
+  alert(window.location.href)
+
   const handleSelect = (method) => {
     updateData({ kycMethod: method });
     const lang = localStorage.getItem('lang') || 'la';

@@ -16,8 +16,8 @@ docker push apb.registry-img.com/app-uat/msp-register-kyc-ui:v1.0.3
 
 bash
 # Windows Command build and push
-docker build -t apb.registry-img.com/app-uat/msp-register-kyc-ui:v1.0.4 .
-docker push apb.registry-img.com/app-uat/msp-register-kyc-ui:v1.0.4
+docker build -t apb.registry-img.com/app-uat/msp-register-kyc-ui:v1.0.6 .
+docker push apb.registry-img.com/app-uat/msp-register-kyc-ui:v1.0.6
 
 
 

@@ -24,7 +24,14 @@ export function AppRoutes() {
   useEffect(() => {
     const supported = ['en', 'la'];
     const params = new URLSearchParams(window.location.search);
-    const langParam = params.get('langCode') || params.get('lang');
+    let langParam = params.get('langCode') || params.get('lang');
+
+    if(langParam === "LA"){
+        langParam = "la"
+    }else if (langParam === "EN"){
+        langParam = "en"
+    }
+
 
     if (langParam && supported.includes(langParam)) {
       setLang(langParam);
@@ -53,6 +60,7 @@ export function AppRoutes() {
     if (profileParam) {
       localStorage.setItem('register_profile', JSON.stringify(profileParam));
     }
+    
   }, [lang, i18n, search]);
 
   return (
