@@ -20,6 +20,8 @@ const defaultState = {
   district: '',
   province: '',
   village: '',
+  roadLineOne: '',
+  roadLineTwo: '',
   kycMethod: '',
   documentType: 'passport',
   documentNumber: '',
@@ -48,6 +50,7 @@ const defaultState = {
   alertDOB: true,
   provinceName: "",
   districtName: "",
+  villageName: "",
 };
 
 const RegistrationContext = createContext(null);
@@ -147,9 +150,9 @@ export function RegistrationProvider({ children }) {
 
 
   const fullName = useMemo(() => {
-    const parts = [data.title, data.firstName, data.lastName].filter(Boolean);
+    const parts = [data.title, data.firstName, data.MidleName, data.lastName].filter(Boolean);
     return parts.join(' ').toUpperCase();
-  }, [data.title, data.firstName, data.lastName]);
+  }, [data.title, data.firstName, data.MidleName, data.lastName]);
 
   const value = useMemo(
     () => ({

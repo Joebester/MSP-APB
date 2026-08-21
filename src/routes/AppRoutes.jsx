@@ -1,5 +1,4 @@
 import { Navigate, Route, Routes, useParams } from 'react-router-dom';
-import ConfirmRegistration from '../pages/registration/ConfirmRegistration';
 import GeneralDetailsStep from '../pages/registration/GeneralDetailsStep';
 import RegistrationIntro from '../pages/registration/RegistrationIntro';
 import RegistrationSuccess from '../pages/registration/RegistrationSuccess';
@@ -7,11 +6,12 @@ import SetPinStep from '../pages/registration/SetPinStep';
 import PolicyPage from '../pages/registration/PolicyPage';
 import TermsPage from '../pages/registration/TermsPage';
 import VerifyStep from '../pages/registration/VerifyStep';
-import ConfirmSubmitStep from '../pages/registration/ConfirmSubmitStep';
 import DocumentsUploadStep from '../pages/registration/DocumentsUploadStep';
 import KycStep from '../pages/registration/KycStep';
-import SecurityQuestionsStep from '../pages/registration/SecurityQuestionsStep';
 import KycMepormStep from '../pages/registration/KycMepormStep';
+import SecurityQuestionsStep from '../pages/registration/SecurityQuestionsStep';
+import ConfirmRegistration from '../pages/registration/ConfirmRegistration';
+import ConfirmSubmitStep from '../pages/registration/ConfirmSubmitStep';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 
@@ -23,18 +23,37 @@ export function AppRoutes() {
 
   useEffect(() => {
     const supported = ['en', 'la'];
-    try {
-      
-      setLang(search.split("=")[1])
-      if (lang && supported.includes(lang)) {
-        i18n.changeLanguage(lang);
-        localStorage.setItem("lang", lang)
+    const params = new URLSearchParams(window.location.search);
+    const langParam = params.get('langCode') || params.get('lang');
+
+    if (langParam && supported.includes(langParam)) {
+      setLang(langParam);
+      i18n.changeLanguage(langParam);
+      localStorage.setItem("lang", langParam);
+    } else {
+      try {
+        const fallback = search.split("=")[1];
+        if (fallback && supported.includes(fallback)) {
+          setLang(fallback);
+          i18n.changeLanguage(fallback);
+          localStorage.setItem("lang", fallback);
+        }
+      } catch (error) {
+        setLang("la");
+        localStorage.setItem("lang", "la");
       }
-    } catch (error) {
-      setLang("la")
-      localStorage.setItem("lang", "la")
     }
-  }, [lang, i18n]);
+
+    const tokenParam = params.get('token') || params.get('accessToken');
+    if (tokenParam) {
+      localStorage.setItem('access_token', tokenParam);
+    }
+
+    const profileParam = params.get('profileId') || params.get('profile');
+    if (profileParam) {
+      localStorage.setItem('register_profile', JSON.stringify(profileParam));
+    }
+  }, [lang, i18n, search]);
 
   return (
     <Routes>

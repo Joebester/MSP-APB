@@ -40,10 +40,10 @@ export default function ConfirmRegistration() {
       profileId: u_id,
       prefixCode: data.title,
       firstNameLa: data.firstName,
-      middleNameLa: data.MiddleName || '',
+      middleNameLa: data.MidleName || '',
       lastNameLa: data.lastName,
       firstNameEn: data.firstName,
-      middleNameEn: data.MiddleName || '',
+      middleNameEn: data.MidleName || '',
       lastNameEn: data.lastName,
       birthday: data.dateOfBirth,
       tel: data.phone,
@@ -79,7 +79,6 @@ export default function ConfirmRegistration() {
         deviceInfo: navigator.userAgent || '',
         pushToken: '',
       },
-
     }
 
     if (data.country === "laos") {
@@ -88,10 +87,10 @@ export default function ConfirmRegistration() {
         profileId: u_id,
         prefixCode: data.title,
         firstNameLa: data.firstName,
-        middleNameLa: data.MiddleName || '',
+        middleNameLa: data.MidleName || '',
         lastNameLa: data.lastName,
         firstNameEn: data.firstNameEn,
-        middleNameEn: data.MiddleNameEn || '',
+        middleNameEn: data.MidleNameEn || '',
         lastNameEn: data.lastNameEn,
         birthday: data.dateOfBirth,
         tel: data.phone,
@@ -157,7 +156,6 @@ export default function ConfirmRegistration() {
     //   customerCode: data.customerCode,
     // };
     console.log(signupData)
-
     const success = await submitInfo(signupData);
 
     if (success) {
@@ -191,7 +189,7 @@ export default function ConfirmRegistration() {
             <InfoSection title={<Trans>Present address</Trans>}>
               <InfoRow label={<Trans>Province</Trans>} value={data.provinceName || 'null'} />
               <InfoRow label={<Trans>District</Trans>} value={data.districtName || 'null'} />
-              <InfoRow label={<Trans>Village</Trans>} value={data.village || 'null'} />
+              <InfoRow label={<Trans>Village</Trans>} value={data.villageName || data.village || 'null'} />
             </InfoSection>
           </div>
         </div>

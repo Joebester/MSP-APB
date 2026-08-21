@@ -15,9 +15,10 @@ import { Trans } from 'react-i18next';
 
 export default function GeneralDetailsStep() {
   const navigate = useNavigate();
-  const { data, updateData, updateDataSelect } = useRegistration();
-  const { provinces, cities, prefixes, fetchProvinces, fetchCities, fetchPrefixes, loadingProvinces, loadingCities, loadingPrefixes } = useLocationStore();
-  // console.log(JSON.stringify(data))
+  const { data, updateData } = useRegistration();
+  const { provinces, cities, villages, prefixes, fetchProvinces, fetchCities, fetchVillages, fetchPrefixes, loadingProvinces, loadingCities, loadingVillages, loadingPrefixes } = useLocationStore();
+  const isLaos = data.country === 'laos';
+
   useEffect(() => {
     fetchProvinces();
     fetchPrefixes();
@@ -37,6 +38,12 @@ export default function GeneralDetailsStep() {
       }
     }
   }, [data.province, provinces, fetchCities]);
+
+  useEffect(() => {
+    if (isLaos && data.district) {
+      fetchVillages(data.district);
+    }
+  }, [isLaos, data.district, fetchVillages]);
 
   const lang = localStorage.getItem('lang') || 'la';
 
@@ -61,13 +68,20 @@ export default function GeneralDetailsStep() {
     }))
     : DISTRICTS;
 
+  const villageOptions = villages.length > 0
+    ? villages.map(v => ({
+      label: lang === 'la' ? (v.nameLa || v.villageNameLa || v.nameEn || v.villageNameEn || v.id) : (v.nameEn || v.villageNameEn || v.nameLa || v.villageNameLa || v.id),
+      value: v.id
+    }))
+    : [];
+
   const canProceed =
     data.firstName.trim() &&
     data.lastName.trim() &&
     data.occupation &&
     (data.district || data.districtName) &&
     (data.province || data.provinceName) &&
-    data.village.trim() &&
+    String(data.village || '').trim() &&
     data.alertDOB === false;
 
   return (
@@ -110,7 +124,6 @@ export default function GeneralDetailsStep() {
                 helperText={(data.alertFirstName && data.firstName === '') && <p className='text-red-500'><Trans>Please</Trans> <Trans>Enter your First Name</Trans></p>}
               />}
 
-
             </div>
 
             {data.country === "international" ? <>
@@ -127,7 +140,6 @@ export default function GeneralDetailsStep() {
                 placeholder={lang === 'la' ? "ປ້ອນຊື່ກາງ" : 'Enter Midle Name'}
                 value={data.MidleName}
                 onChange={(e) => updateData({ MidleName: e.target.value })}
-              // helperText={(data.MidleName && data.MidleName === '') && <p className='text-red-500'><Trans>Please</Trans> <Trans>Enter your MidleName Name</Trans></p>}
               />
             </> : <>
               <Input
@@ -144,9 +156,7 @@ export default function GeneralDetailsStep() {
                 placeholder={lang === 'la' ? "ປ້ອນຊື່ກາງ" : 'Enter Midle Name'}
                 value={data.MidleName}
                 onChange={(e) => updateData({ MidleName: e.target.value })}
-              // helperText={(data.MidleName && data.MidleName === '') && <p className='text-red-500'><Trans>Please</Trans> <Trans>Enter your MidleName Name</Trans></p>}
               />
-
 
               <Input
                 label={<Trans>First Name English</Trans>}
@@ -171,10 +181,8 @@ export default function GeneralDetailsStep() {
                 placeholder={lang === 'la' ? "ປ້ອນຊື່ກາງ" : 'Enter Midle Name'}
                 value={data.MidleNameEn}
                 onChange={(e) => updateData({ MidleNameEn: e.target.value })}
-              // helperText={(data.MidleName && data.MidleName === '') && <p className='text-red-500'><Trans>Please</Trans> <Trans>Enter your MidleName Name</Trans></p>}
               />
             </>}
-
 
             <div>
               <label className="mb-1.5 block text-sm font-semibold text-gray-900">
@@ -191,7 +199,6 @@ export default function GeneralDetailsStep() {
                   className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
                   aria-hidden="true"
                 />
-
               </div>
               <div>
                 {(data.alertDOB) && <p className='text-red-500'><Trans>You are under 18 Years old please contact MSP admin</Trans></p>}
@@ -225,11 +232,8 @@ export default function GeneralDetailsStep() {
                 options={provinceOptions}
                 value={data.province}
                 onSelect={({ value, label }) => {
-                  updateData({ province: value, provinceName: label }); // Reset district when province changes
+                  updateData({ province: value, provinceName: label, district: '', districtName: '', village: '', villageName: '' });
                 }}
-                // onChange={(e) => {
-                //   updateDataSelect({ province: e.target.value }); // Reset district when province changes
-                // }}
                 placeholder={loadingProvinces ? <Trans>Loading...</Trans> : <Trans>Select your Province</Trans>}
               />
 
@@ -239,20 +243,22 @@ export default function GeneralDetailsStep() {
                 options={districtOptions}
                 value={data.district}
                 onSelect={({ value, label }) => {
-                  updateData({ district: value, districtName: label }); // Reset district when province changes
+                  updateData({ district: value, districtName: label, village: '', villageName: '' });
                 }}
-                // onChange={(e) => updateDataSelect({ district: e.target.label })}
                 placeholder={loadingCities ? <Trans>Loading...</Trans> : <Trans>Select your District</Trans>}
                 disabled={!data.province}
               />
 
-              <Input
+              <Select
                 label={<Trans>Village</Trans>}
                 required
-                placeholder={lang === "la" ? "ປ້ອນບ້ານຂອງທ່ານ" : "Enter your Village"}
+                options={villageOptions}
                 value={data.village}
-                onChange={(e) => updateData({ village: e.target.value })}
-                helperText={(data.alertVillage && data.village === '') && <p className='text-red-500'><Trans>Please</Trans> <Trans>Enter your Village</Trans></p>}
+                onSelect={({ value, label }) => {
+                  updateData({ village: value, villageName: label });
+                }}
+                placeholder={loadingVillages ? <Trans>Loading...</Trans> : <Trans>Select your Village</Trans>}
+                disabled={!data.district}
               />
 
               <Input
@@ -299,8 +305,6 @@ export default function GeneralDetailsStep() {
                 onChange={(e) => updateData({ occupation: e.target.value })}
                 helperText={(data.alertOccupation && data.occupation === '') && <p className='text-red-500'><Trans>Please</Trans> <Trans>Enter your Occupation</Trans></p>}
               />
-
-
             </section>
           </div>}
 

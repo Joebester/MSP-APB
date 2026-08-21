@@ -1,5 +1,6 @@
-import { Camera, ChevronRight, Video } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { Button } from '../ui/Button';
+import { icDoc, icKyc2, icKyc3, icCamera, icKyc1 } from '../../constants/assets';
 
 function CornerBrackets() {
   return (
@@ -13,29 +14,19 @@ function CornerBrackets() {
 }
 
 function DocumentIllustration({ variant = 'document' }) {
+  let assetSrc = icDoc;
+  if (variant === 'selfie') assetSrc = icKyc2;
+  else if (variant === 'video') assetSrc = icKyc3;
+  else if (variant === 'kyc1') assetSrc = icKyc1;
+
   return (
-    <div className="relative mx-auto flex h-28 w-40 items-center justify-center">
+    <div className="relative mx-auto flex h-28 w-44 items-center justify-center p-2">
       <CornerBrackets />
-      {variant === 'document' ? (
-        <div className="flex h-16 w-24 flex-col overflow-hidden rounded-md border-2 border-gray-300 bg-white shadow-sm">
-          <div className="h-6 bg-msp-green/20" />
-          <div className="flex flex-1 items-center justify-center p-2">
-            <div className="h-8 w-8 rounded-full bg-gray-200" />
-          </div>
-        </div>
-      ) : (
-        <div className="flex items-end gap-2">
-          <div className="flex h-14 w-10 flex-col items-center justify-end rounded-full bg-gray-200 pb-1">
-            <div className="h-6 w-6 rounded-full bg-gray-300" />
-          </div>
-          <div className="flex h-12 w-16 flex-col overflow-hidden rounded border-2 border-gray-300 bg-white">
-            <div className="h-3 bg-msp-green/20" />
-            <div className="flex flex-1 items-center justify-center">
-              <div className="h-4 w-4 rounded-full bg-gray-200" />
-            </div>
-          </div>
-        </div>
-      )}
+      <img
+        src={assetSrc}
+        alt={variant}
+        className="max-h-20 max-w-full object-contain drop-shadow-sm"
+      />
     </div>
   );
 }
@@ -49,8 +40,6 @@ export function DocumentCaptureCard({
   completed = false,
   onCapture,
 }) {
-  const Icon = actionType === 'video' ? Video : Camera;
-
   return (
     <section className="space-y-2">
       <h3 className="text-sm font-bold text-gray-900">{title}</h3>
@@ -65,7 +54,7 @@ export function DocumentCaptureCard({
             onClick={onCapture}
             className={`gap-2 bg-teal-600 px-6 hover:bg-teal-700 ${completed ? 'opacity-80' : ''}`}
           >
-            <Icon className="h-4 w-4" />
+            <img src={icCamera} alt="Camera" className="h-4 w-4 object-contain brightness-0 invert" />
             {completed ? 'Retake' : actionLabel}
           </Button>
         </div>
@@ -86,8 +75,12 @@ export function KycOptionCard({ icon, title, subtitle, onClick }) {
       onClick={onClick}
       className="flex w-full items-center gap-4 rounded-xl border border-gray-200 bg-white p-4 text-left transition hover:border-msp-green/40 hover:bg-gray-50"
     >
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gray-100">
-        {icon}
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gray-100 overflow-hidden p-2">
+        {typeof icon === 'string' ? (
+          <img src={icon} alt="" className="h-8 w-8 object-contain" />
+        ) : (
+          icon
+        )}
       </div>
       <div className="min-w-0 flex-1">
         <p className="font-bold text-gray-900">{title}</p>
@@ -97,3 +90,4 @@ export function KycOptionCard({ icon, title, subtitle, onClick }) {
     </button>
   );
 }
+
