@@ -12,6 +12,7 @@ import KycMepormStep from '../pages/registration/KycMepormStep';
 import SecurityQuestionsStep from '../pages/registration/SecurityQuestionsStep';
 import ConfirmRegistration from '../pages/registration/ConfirmRegistration';
 import ConfirmSubmitStep from '../pages/registration/ConfirmSubmitStep';
+import KycCheckPage from '../pages/registration/KycCheckPage';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { getLanguageFromUrl } from '../utils/lang';
@@ -50,6 +51,7 @@ export function AppRoutes() {
       <Route path="/policy" element={<PolicyPage />} />
       <Route path="/verify" element={<VerifyStep />} />
       <Route path="/details" element={<GeneralDetailsStep />} />
+      <Route path="/kyc-check" element={<KycCheckPage />} />
       <Route path="/kyc" element={<KycStep />} />
       <Route path="/kyc/meporm" element={<KycMepormStep />} />
       <Route path="/documents" element={<DocumentsUploadStep />} />

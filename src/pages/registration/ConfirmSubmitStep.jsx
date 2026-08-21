@@ -65,7 +65,7 @@ export default function ConfirmSubmitStep() {
     } else {
       const success = await confirmRegistration(u_id);
       if (success) {
-        navigate(`/security-questions?langCode=${lang}`);
+        navigate(`/kyc-check?langCode=${lang}`);
       }
     }
   };
