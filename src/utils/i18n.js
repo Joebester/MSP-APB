@@ -1,5 +1,6 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
+import { getLanguageFromUrl } from './lang';
 
 const resources = {
     en: {
@@ -135,6 +136,10 @@ const resources = {
             "Your identity has been verified via APB Meporm. Your eWallet is now active and ready to use.": "Your identity has been verified via APB Meporm. Your eWallet is now active and ready to use.",
             "Your documents have been submitted for admin review. You will be notified once the verification is complete.": "Your documents have been submitted for admin review. You will be notified once the verification is complete.",
             "Done": "Done",
+            "KYC Verified": "KYC Verified",
+            "Thank you for completing your KYC verification. Your identity has been verified successfully.": "Thank you for completing your KYC verification. Your identity has been verified successfully.",
+            "Checking KYC status...": "Checking KYC status...",
+            "Verified": "Verified",
         },
     },
     la: {
@@ -270,6 +275,10 @@ const resources = {
             "Your identity has been verified via APB Meporm. Your eWallet is now active and ready to use.": "ຕົວຕົນຂອງທ່ານໄດ້ຮັບການຢືນຢັນຜ່ານ APB Meporm ແລ້ວ. ກະເປົ໋າເງິນຂອງທ່ານເປີດໃຊ້ງານ ແລະ ພ້ອມໃຊ້ງານແລ້ວ.",
             "Your documents have been submitted for admin review. You will be notified once the verification is complete.": "ເອກະສານຂອງທ່ານໄດ້ຖືກສົ່ງເພື່ອໃຫ້ຜູ້ດູແລລະບົບກວດສອບແລ້ວ. ທ່ານຈະໄດ້ຮັບການແຈ້ງເຕືອນເມື່ອການກວດສອບສຳເລັດ.",
             "Done": "ສຳເລັດ",
+            "KYC Verified": "ຢືນຢັນ KYC ສຳເລັດ",
+            "Thank you for completing your KYC verification. Your identity has been verified successfully.": "ຂອບໃຈທີ່ທ່ານໄດ້ສຳເລັດການຢືນຢັນ KYC. ຕົວຕົນຂອງທ່ານໄດ້ຮັບການຢືນຢັນສຳເລັດແລ້ວ.",
+            "Checking KYC status...": "ກຳລັງກວດສອບສະຖານະ KYC...",
+            "Verified": "ຢືນຢັນແລ້ວ",
         },
     },
 };
@@ -278,8 +287,8 @@ i18n
     .use(initReactI18next)
     .init({
         resources,
-
-
+        lng: getLanguageFromUrl(),
+        fallbackLng: 'la',
         interpolation: {
             escapeValue: false
         }

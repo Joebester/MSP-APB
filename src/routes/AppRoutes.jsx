@@ -12,14 +12,16 @@ import KycMepormStep from '../pages/registration/KycMepormStep';
 import SecurityQuestionsStep from '../pages/registration/SecurityQuestionsStep';
 import ConfirmRegistration from '../pages/registration/ConfirmRegistration';
 import ConfirmSubmitStep from '../pages/registration/ConfirmSubmitStep';
+import KycCheckPage from '../pages/registration/KycCheckPage';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
+import { getLanguageFromUrl } from '../utils/lang';
 
 export function AppRoutes() {
   const url = useParams();
   const { i18n } = useTranslation();
-  const search = window.location.search
-  const [lang, setLang] = useState("la")
+  const search = window.location.search;
+  const [lang, setLang] = useState(() => getLanguageFromUrl());
 
   useEffect(() => {
     const supported = ['en', 'la'];
@@ -51,12 +53,13 @@ export function AppRoutes() {
       }
     }
 
-    const tokenParam = params.get('token') || params.get('accessToken');
+    const params1 = new URLSearchParams(window.location.search);
+    const tokenParam = params1.get('token') || params.get('accessToken');
     if (tokenParam) {
       localStorage.setItem('access_token', tokenParam);
     }
 
-    const profileParam = params.get('profileId') || params.get('profile');
+    const profileParam = params1.get('profileId') || params1.get('profile');
     if (profileParam) {
       localStorage.setItem('register_profile', JSON.stringify(profileParam));
     }
@@ -68,15 +71,18 @@ export function AppRoutes() {
       {/* <Route path="/" element={<Navigate to="/" replace />} /> */}
 
       <Route path="/" element={<RegistrationIntro />} />
+      <Route path="/register" element={<RegistrationIntro />} />
       <Route path="/policy" element={<PolicyPage />} />
       <Route path="/verify" element={<VerifyStep />} />
       <Route path="/details" element={<GeneralDetailsStep />} />
+      <Route path="/kyc-check" element={<KycCheckPage />} />
       <Route path="/kyc" element={<KycStep />} />
       <Route path="/kyc/meporm" element={<KycMepormStep />} />
       <Route path="/documents" element={<DocumentsUploadStep />} />
       <Route path="/pin" element={<SetPinStep />} />
       <Route path="/security-questions" element={<SecurityQuestionsStep />} />
       <Route path="/terms" element={<TermsPage />} />
+      <Route path="/register/terms" element={<TermsPage />} />
       <Route path="/confirm" element={<ConfirmRegistration />} />
       <Route path="/review" element={<ConfirmSubmitStep />} />
       <Route path="/success" element={<RegistrationSuccess />} />

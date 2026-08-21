@@ -159,7 +159,7 @@ export default function ConfirmRegistration() {
     const success = await submitInfo(signupData);
 
     if (success) {
-      navigate('/review?lang=' + lang);
+      navigate('/review?langCode=' + lang);
     }
   };
 
@@ -205,7 +205,7 @@ export default function ConfirmRegistration() {
                 <span className="text-sm text-gray-900">
                   <Trans>Accept all terms</Trans>,{' '}
                   <Link
-                    to={"/terms?lang=" + lang}
+                    to={"/terms?langCode=" + lang}
                     className="font-semibold text-blue-600 underline"
                   >
                     <Trans>Details</Trans>

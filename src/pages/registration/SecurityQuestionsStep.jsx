@@ -8,6 +8,7 @@ import { SECURITY_QUESTIONS } from '../../constants/registration';
 import { useRegistration } from '../../context/RegistrationContext';
 import { useRegistrationStore } from '../../store/useRegistrationStore';
 import { useTranslation, Trans } from 'react-i18next';
+import { getLanguageFromUrl } from '../../utils/lang';
 
 export default function SecurityQuestionsStep() {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ export default function SecurityQuestionsStep() {
 
   const params = new URLSearchParams(window.location.search);
   const isMepormFlow = params.get('type') === 'meporm';
-  const lang = params.get('lang') || localStorage.getItem('lang') || 'la';
+  const lang = getLanguageFromUrl();
 
   const canProceed = data.securityAnswers.every((answer) => answer.trim()) && !submitting;
 
@@ -28,9 +29,9 @@ export default function SecurityQuestionsStep() {
     setSubmitting(false);
     if (success) {
       if (isMepormFlow) {
-        navigate(`/kyc/meporm?lang=${lang}`);
+        navigate(`/kyc/meporm?langCode=${lang}`);
       } else {
-        navigate(`/kyc?lang=${lang}`);
+        navigate(`/kyc?langCode=${lang}`);
       }
     }
   };
@@ -47,7 +48,7 @@ export default function SecurityQuestionsStep() {
         <div className="flex justify-end px-4 pt-4 sm:px-6">
           <button
             type="button"
-            onClick={() => navigate(isMepormFlow ? '/kyc' : '/pin')}
+            onClick={() => navigate(isMepormFlow ? `/kyc?langCode=${lang}` : `/pin?langCode=${lang}`)}
             className="rounded-lg p-1 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
             aria-label="Close"
           >
@@ -78,7 +79,7 @@ export default function SecurityQuestionsStep() {
         </div>
 
         <StepFooter
-          onBack={() => navigate(isMepormFlow ? '/kyc' : '/confirm')}
+          onBack={() => navigate(isMepormFlow ? `/kyc?langCode=${lang}` : `/confirm?langCode=${lang}`)}
           onNext={handleNext}
           nextDisabled={!canProceed}
           nextLabel={submitting ? t("Saving...") : t("Next")}
