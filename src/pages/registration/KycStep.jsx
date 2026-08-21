@@ -1,21 +1,18 @@
 import { useNavigate } from 'react-router-dom';
-import { FileText, Sprout } from 'lucide-react';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { KycOptionCard } from '../../components/registration/DocumentCaptureCard';
 import { useRegistration } from '../../context/RegistrationContext';
 import { Trans } from 'react-i18next';
+import { icKycUser, icMeporm, icDoc } from '../../constants/assets';
 
 function KycIllustration() {
   return (
     <div className="relative mx-auto flex h-32 w-32 items-center justify-center">
-      <div className="flex h-24 w-20 flex-col items-center justify-end rounded-full bg-sky-100 pb-2">
-        <div className="h-10 w-10 rounded-full bg-sky-200" />
-        <div className="mt-1 h-8 w-14 rounded-t-full bg-sky-300" />
-      </div>
-      <div className="absolute inset-4 border-2 border-red-400" />
-      <div className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-msp-green text-white">
-        ✓
-      </div>
+      <img
+        src={icKycUser}
+        alt="KYC Verification"
+        className="h-28 w-28 object-contain drop-shadow-md"
+      />
     </div>
   );
 }
@@ -47,17 +44,13 @@ export default function KycStep() {
 
           <div className="mt-8 space-y-4">
             <KycOptionCard
-              icon={
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-100">
-                  <Sprout className="h-5 w-5 text-orange-600" />
-                </div>
-              }
+              icon={icMeporm}
               title={<Trans>Verify by APB Meporm</Trans>}
               subtitle={<Trans>Reference your account APB Meporm already</Trans>}
               onClick={() => handleSelect('meporm')}
             />
             <KycOptionCard
-              icon={<FileText className="h-6 w-6 text-msp-green" />}
+              icon={icDoc}
               title={<Trans>Verify by Documents</Trans>}
               subtitle={<Trans>Identity document, Census number, Passport</Trans>}
               onClick={() => handleSelect('documents')}
@@ -68,3 +61,4 @@ export default function KycStep() {
     </div>
   );
 }
+

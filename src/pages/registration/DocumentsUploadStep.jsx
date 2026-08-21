@@ -152,12 +152,13 @@ export default function DocumentsUploadStep() {
           <DocumentCaptureCard
             title={t("Take video shorts")}
             instruction={t("Take a video shorts holding your document")}
-            variant="selfie"
+            variant="video"
             actionLabel={t("Take Video")}
             actionType="video"
             completed={!!data.videoFile}
             onCapture={() => document.getElementById('video-file-input').click()}
           />
+
         </div>
 
         <StepFooter

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { AlertTriangle, ArrowLeftRight, X, Sprout } from 'lucide-react';
+import { AlertTriangle, ArrowLeftRight, X } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
@@ -7,20 +7,13 @@ import { PageContainer } from '../../components/layout/PageContainer';
 import { useRegistration } from '../../context/RegistrationContext';
 import { useRegistrationStore } from '../../store/useRegistrationStore';
 import { useTranslation, Trans } from 'react-i18next';
+import { icAppMsp, icMeporm } from '../../constants/assets';
 
 function MepormLogo() {
   return (
-    <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-msp-green shadow-sm">
-      <SproutIcon />
+    <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gray-50 border border-gray-200 p-1.5 shadow-sm">
+      <img src={icMeporm} alt="APB Meporm" className="h-full w-full object-contain" />
     </div>
-  );
-}
-
-function SproutIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-8 w-8 text-white" fill="currentColor">
-      <path d="M12 2C8 6 6 9 6 12c0 3.3 2.7 6 6 6s6-2.7 6-6c0-3-2-6-6-10zm0 14c-2.2 0-4-1.8-4-4 0-1.5.8-3.5 4-7.5 3.2 4 4 6 4 7.5 0 2.2-1.8 4-4 4z" />
-    </svg>
   );
 }
 
@@ -64,12 +57,13 @@ export default function KycMepormStep() {
 
         <div className="flex flex-1 flex-col px-4 pb-6 sm:px-6">
           <div className="flex items-center justify-center gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-msp-green shadow-sm">
-              <span className="text-sm font-bold text-msp-neon">MSP</span>
+            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gray-50 border border-gray-200 p-1.5 shadow-sm">
+              <img src={icAppMsp} alt="MSP" className="h-full w-full object-contain" />
             </div>
             <ArrowLeftRight className="h-5 w-5 text-gray-800" />
             <MepormLogo />
           </div>
+
 
           <h1 className="mt-6 text-center text-lg font-bold text-gray-900">
             <Trans>MEPOM Instant Verification</Trans>
