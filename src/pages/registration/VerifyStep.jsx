@@ -153,7 +153,7 @@ export default function VerifyStep() {
           <p className="px-4 pb-2 text-center text-xs text-red-500 sm:px-6">{verifyError}</p>
         )}
         <StepFooter
-          onBack={() => navigate('/policy?lang=' + localStorage.getItem("lang"))}
+          onBack={() => navigate('/policy?langCode=' + (localStorage.getItem("lang") || 'la'))}
           onNext={async () => {
             const result = isLaos
               ? await verifyOtp(
@@ -166,7 +166,7 @@ export default function VerifyStep() {
               );
 
             if (result) {
-              navigate(`/details?lang=${localStorage.getItem('lang') || 'la'}`);
+              navigate(`/details?langCode=${localStorage.getItem('lang') || 'la'}`);
             }
 
             // if (result) {

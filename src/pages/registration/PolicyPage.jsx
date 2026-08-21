@@ -67,8 +67,8 @@ export default function PolicyPage() {
         </div>
 
         <StepFooter
-          onBack={() => navigate('/register?lang=' + localStorage.getItem("lang"))}
-          onNext={() => navigate('/verify?lang=' + localStorage.getItem("lang"))}
+          onBack={() => navigate('/register?langCode=' + (localStorage.getItem("lang") || 'la'))}
+          onNext={() => navigate('/verify?langCode=' + (localStorage.getItem("lang") || 'la'))}
           nextDisabled={!agreed}
         />
       </PageContainer>

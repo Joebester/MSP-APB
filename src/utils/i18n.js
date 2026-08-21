@@ -1,5 +1,6 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
+import { getLanguageFromUrl } from './lang';
 
 const resources = {
     en: {
@@ -278,8 +279,8 @@ i18n
     .use(initReactI18next)
     .init({
         resources,
-
-
+        lng: getLanguageFromUrl(),
+        fallbackLng: 'la',
         interpolation: {
             escapeValue: false
         }

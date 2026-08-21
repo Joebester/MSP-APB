@@ -19,7 +19,7 @@ export default function SetPinStep() {
     
     if (isComplete) {
       updateData({ pin });
-      const timer = setTimeout(() => navigate('/terms?lang=' + lang), 400);
+      const timer = setTimeout(() => navigate('/terms?langCode=' + lang), 400);
       return () => clearTimeout(timer);
     }
   }, [isComplete, pin, updateData, navigate]);

@@ -34,7 +34,7 @@ export default function KycMepormStep() {
     const success = await verifyMepom(mepomId.trim());
     setVerifying(false);
     if (success) {
-      navigate('/success?type=kyc&kyc=meporm&lang=' + (localStorage.getItem("lang") || 'la'));
+      navigate('/success?type=kyc&kyc=meporm&langCode=' + (localStorage.getItem("lang") || 'la'));
     } else {
       setError(t('Identification failed. Please check your User ID and try again.'));
     }
@@ -46,7 +46,7 @@ export default function KycMepormStep() {
         <div className="flex justify-end px-4 pt-4 sm:px-6">
           <button
             type="button"
-            onClick={() => navigate('/kyc')}
+            onClick={() => navigate('/kyc?langCode=' + (localStorage.getItem("lang") || 'la'))}
             className="rounded-lg p-1 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
             aria-label="Close"
             disabled={verifying}
@@ -114,7 +114,7 @@ export default function KycMepormStep() {
             variant="secondary"
             className="flex-1"
             size="lg"
-            onClick={() => navigate('/kyc')}
+            onClick={() => navigate('/kyc?langCode=' + (localStorage.getItem("lang") || 'la'))}
             disabled={verifying}
           >
             {t("Back")}

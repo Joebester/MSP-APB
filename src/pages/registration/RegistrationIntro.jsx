@@ -6,6 +6,7 @@ import { GradientBackground } from '../../components/registration/GradientBackgr
 import { MspLogo } from '../../components/brand/MspLogo';
 import { Trans } from 'react-i18next';
 import { icDoc, icCamera } from '../../constants/assets';
+import { getLanguageFromUrl } from '../../utils/lang';
 
 const requirements = [
   { type: 'lucide', icon: Globe, label: 'Internet' },
@@ -20,7 +21,10 @@ export default function RegistrationIntro() {
   useEffect(() => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('register_profile');
+    getLanguageFromUrl();
   }, []);
+
+  const lang = getLanguageFromUrl();
 
   return (
     <GradientBackground>
@@ -58,7 +62,7 @@ export default function RegistrationIntro() {
             variant="white"
             size="lg"
             className="w-full gap-1"
-            onClick={() => navigate('/policy?lang=' + localStorage.getItem("lang"))}
+            onClick={() => navigate('/policy?langCode=' + lang)}
           >
             <Trans>Register Now</Trans> <span aria-hidden="true">&gt;</span>
           </Button>

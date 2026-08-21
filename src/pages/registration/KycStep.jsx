@@ -25,9 +25,9 @@ export default function KycStep() {
     updateData({ kycMethod: method });
     const lang = localStorage.getItem('lang') || 'la';
     if (method === 'meporm') {
-      navigate('/security-questions?type=meporm&lang=' + lang);
+      navigate('/security-questions?type=meporm&langCode=' + lang);
     } else {
-      navigate('/documents?lang=' + lang);
+      navigate('/documents?langCode=' + lang);
     }
   };
 

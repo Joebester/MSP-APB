@@ -64,7 +64,7 @@ export default function DocumentsUploadStep() {
   };
 
   const handleNext = () => {
-    navigate('/review?type=kyc&lang=' + (localStorage.getItem('lang') || 'la'));
+    navigate('/review?type=kyc&langCode=' + (localStorage.getItem('lang') || 'la'));
   };
 
   return (
@@ -162,7 +162,7 @@ export default function DocumentsUploadStep() {
         </div>
 
         <StepFooter
-          onBack={() => navigate('/kyc')}
+          onBack={() => navigate('/kyc?langCode=' + (localStorage.getItem('lang') || 'la'))}
           onNext={handleNext}
           nextDisabled={!canProceed}
         />

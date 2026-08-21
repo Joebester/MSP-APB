@@ -14,36 +14,22 @@ import ConfirmRegistration from '../pages/registration/ConfirmRegistration';
 import ConfirmSubmitStep from '../pages/registration/ConfirmSubmitStep';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
+import { getLanguageFromUrl } from '../utils/lang';
 
 export function AppRoutes() {
   const url = useParams();
   const { i18n } = useTranslation();
-  const search = window.location.search
-  const [lang, setLang] = useState("la")
+  const search = window.location.search;
+  const [lang, setLang] = useState(() => getLanguageFromUrl());
 
   useEffect(() => {
-    const supported = ['en', 'la'];
-    const params = new URLSearchParams(window.location.search);
-    const langParam = params.get('langCode') || params.get('lang');
-
-    if (langParam && supported.includes(langParam)) {
-      setLang(langParam);
-      i18n.changeLanguage(langParam);
-      localStorage.setItem("lang", langParam);
-    } else {
-      try {
-        const fallback = search.split("=")[1];
-        if (fallback && supported.includes(fallback)) {
-          setLang(fallback);
-          i18n.changeLanguage(fallback);
-          localStorage.setItem("lang", fallback);
-        }
-      } catch (error) {
-        setLang("la");
-        localStorage.setItem("lang", "la");
-      }
+    const currentLang = getLanguageFromUrl();
+    setLang(currentLang);
+    if (i18n.language !== currentLang) {
+      i18n.changeLanguage(currentLang);
     }
 
+    const params = new URLSearchParams(window.location.search);
     const tokenParam = params.get('token') || params.get('accessToken');
     if (tokenParam) {
       localStorage.setItem('access_token', tokenParam);
@@ -53,13 +39,14 @@ export function AppRoutes() {
     if (profileParam) {
       localStorage.setItem('register_profile', JSON.stringify(profileParam));
     }
-  }, [lang, i18n, search]);
+  }, [i18n, search]);
 
   return (
     <Routes>
       {/* <Route path="/" element={<Navigate to="/" replace />} /> */}
 
       <Route path="/" element={<RegistrationIntro />} />
+      <Route path="/register" element={<RegistrationIntro />} />
       <Route path="/policy" element={<PolicyPage />} />
       <Route path="/verify" element={<VerifyStep />} />
       <Route path="/details" element={<GeneralDetailsStep />} />
@@ -69,6 +56,7 @@ export function AppRoutes() {
       <Route path="/pin" element={<SetPinStep />} />
       <Route path="/security-questions" element={<SecurityQuestionsStep />} />
       <Route path="/terms" element={<TermsPage />} />
+      <Route path="/register/terms" element={<TermsPage />} />
       <Route path="/confirm" element={<ConfirmRegistration />} />
       <Route path="/review" element={<ConfirmSubmitStep />} />
       <Route path="/success" element={<RegistrationSuccess />} />

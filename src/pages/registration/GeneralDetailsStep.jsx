@@ -311,8 +311,8 @@ export default function GeneralDetailsStep() {
         </div>
 
         <StepFooter
-          onBack={() => navigate('/verify?lang=' + lang)}
-          onNext={() => navigate('/pin?lang=' + lang)}
+          onBack={() => navigate('/verify?langCode=' + lang)}
+          onNext={() => navigate('/pin?langCode=' + lang)}
           nextDisabled={!canProceed}
         />
       </PageContainer>

@@ -8,6 +8,7 @@ import { useRegistration } from '../../context/RegistrationContext';
 import { useRegistrationStore } from '../../store/useRegistrationStore';
 import { Trans } from 'react-i18next';
 import { aesDecrypt } from '../../utils/crypto';
+import { getLanguageFromUrl } from '../../utils/lang';
 
 export default function ConfirmSubmitStep() {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ export default function ConfirmSubmitStep() {
 
   const params = new URLSearchParams(window.location.search);
   const isKycMode = params.get('type') === 'kyc';
-  const lang = params.get('lang') || localStorage.getItem('lang') || 'la';
+  const lang = getLanguageFromUrl();
 
   const handleConfirm = async () => {
     if (isKycMode) {
@@ -59,12 +60,12 @@ export default function ConfirmSubmitStep() {
       setSubmittingKyc(false);
 
       if (submitOk) {
-        navigate(`/success?type=kyc&lang=${lang}`);
+        navigate(`/success?type=kyc&langCode=${lang}`);
       }
     } else {
       const success = await confirmRegistration(u_id);
       if (success) {
-        navigate(`/security-questions?lang=${lang}`);
+        navigate(`/security-questions?langCode=${lang}`);
       }
     }
   };
@@ -85,7 +86,7 @@ export default function ConfirmSubmitStep() {
         </div>
 
         <StepFooter
-          onBack={() => navigate(isKycMode ? `/documents?lang=${lang}` : '/confirm')}
+          onBack={() => navigate(isKycMode ? `/documents?langCode=${lang}` : `/confirm?langCode=${lang}`)}
           onNext={handleConfirm}
           nextLabel={isPending ? "Submitting..." : "Continue"}
           nextDisabled={isPending}

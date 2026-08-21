@@ -38,7 +38,7 @@ export default function TermsPage() {
         <StepFooter
           singleButton
           singleLabel={<Trans>Continue</Trans>}
-          onSingle={() => navigate('/confirm?lang=' + localStorage.getItem("lang"))}
+          onSingle={() => navigate('/confirm?langCode=' + (localStorage.getItem("lang") || 'la'))}
           nextDisabled={!data.termsAccepted}
         />
       </PageContainer>
