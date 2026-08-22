@@ -68,18 +68,6 @@ export default function RegistrationSuccess() {
             strokeWidth={1.5}
           />
         </div>
-
-        <div className="pb-4 pt-8">
-          <Button
-            variant="white"
-            size="lg"
-            className="w-full gap-1 font-bold text-teal-800"
-            onClick={handleFinish}
-          >
-            {isKyc ? <Trans>Done</Trans> : <Trans>Let&apos;s Start</Trans>}{' '}
-            <span aria-hidden="true">&gt;</span>
-          </Button>
-        </div>
       </div>
     </GradientBackground>
   );
