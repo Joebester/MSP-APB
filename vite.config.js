@@ -11,7 +11,8 @@ export default defineConfig(({ command }) => ({
     port: 1234,
     proxy: {
       '/api': {
-        target: 'http://uat-sv.mobile.apb.com.local',
+        target: 'http://uat-sv.mobile.apb.com.local', // UAT Server
+        // target: 'http://10.2.6.177:7777', // Local Server
         changeOrigin: true,
       },
     },
