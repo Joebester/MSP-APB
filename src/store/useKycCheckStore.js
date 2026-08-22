@@ -40,6 +40,9 @@ export const useKycCheckStore = create((set) => ({
         },
       });
 
+      console.log('[KYC Check API] Response Status:', response.status);
+      console.log('[KYC Check API] Response Data:', response.data);
+
       const header = response.data?.header;
       const body = response.data?.body;
       const code = header?.code;
@@ -59,10 +62,12 @@ export const useKycCheckStore = create((set) => ({
         };
       } else {
         const msg = header?.message || 'Failed to check KYC status';
+        console.error('[KYC Check API] Unsuccessful Code/Header:', header);
         set({ error: msg, loading: false });
         return null;
       }
     } catch (err) {
+      console.error('[KYC Check API] Exception Error:', err?.response?.data || err.message);
       const msg = err?.response?.data?.header?.message || err?.response?.data?.message || err.message || 'Failed to check KYC status';
       set({ error: msg, loading: false });
       return null;
