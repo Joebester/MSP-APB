@@ -49,16 +49,19 @@ export const useKycCheckStore = create((set) => ({
       const ok = response.status === 200 && (code === '0000' || code === '00' || code === 200 || code === '200');
 
       if (ok && body) {
+        const isEmail = body.email === true || body.email === 'true';
         set({
           verifiedDoc: body.verifiedDoc,
           verifiedQt: body.verifiedQt,
           username: body.username || null,
+          email: isEmail,
           loading: false,
         });
         return {
           verifiedDoc: body.verifiedDoc,
           verifiedQt: body.verifiedQt,
           username: body.username,
+          email: isEmail,
         };
       } else {
         const msg = header?.message || 'Failed to check KYC status';

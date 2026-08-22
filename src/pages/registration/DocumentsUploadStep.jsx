@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { PageContainer } from '../../components/layout/PageContainer';
@@ -14,6 +15,18 @@ export default function DocumentsUploadStep() {
   const navigate = useNavigate();
   const { data, updateData } = useRegistration();
   const { t } = useTranslation();
+
+  const isEmailRegister = data?.isEmailRegister || localStorage.getItem('is_email_register') === 'true';
+
+  useEffect(() => {
+    if (isEmailRegister && data.documentType !== 'passport') {
+      updateData({ documentType: 'passport' });
+    }
+  }, [isEmailRegister, data.documentType, updateData]);
+
+  const availableDocTypes = Object.entries(DOCUMENT_TYPES).filter(
+    ([key]) => !isEmailRegister || key === 'passport'
+  );
 
   const docConfig = DOCUMENT_TYPES[data.documentType] || DOCUMENT_TYPES.passport;
 
@@ -85,18 +98,23 @@ export default function DocumentsUploadStep() {
                 <select
                   value={data.documentType}
                   onChange={handleDocTypeChange}
-                  className="w-full appearance-none rounded-lg border border-gray-200 bg-gray-100 px-4 py-3 pr-10 text-sm text-gray-900 outline-none transition focus:border-msp-green focus:ring-2 focus:ring-msp-green/20"
+                  disabled={isEmailRegister}
+                  className={`w-full appearance-none rounded-lg border border-gray-200 bg-gray-100 px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-msp-green focus:ring-2 focus:ring-msp-green/20 disabled:cursor-not-allowed disabled:bg-gray-200 ${
+                    !isEmailRegister && availableDocTypes.length > 1 ? 'pr-10' : 'pr-4'
+                  }`}
                 >
-                  {Object.entries(DOCUMENT_TYPES).map(([key, config]) => (
+                  {availableDocTypes.map(([key, config]) => (
                     <option key={key} value={key}>
                       {t(config.label)}
                     </option>
                   ))}
                 </select>
-                <ChevronDown
-                  className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500"
-                  aria-hidden="true"
-                />
+                {!isEmailRegister && availableDocTypes.length > 1 && (
+                  <ChevronDown
+                    className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500"
+                    aria-hidden="true"
+                  />
+                )}
               </div>
             </div>
 
