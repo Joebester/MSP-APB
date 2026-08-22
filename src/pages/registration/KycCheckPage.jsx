@@ -18,8 +18,10 @@ export default function KycCheckPage() {
 
   useEffect(() => {
     let cancelled = false;
+    console.log('[KycCheckPage] Current Page URL:', window.location.href);
 
     const doCheck = async () => {
+      console.log('[KycCheckPage] Starting KYC check...');
       const result = await checkKyc();
       if (cancelled) return;
 
