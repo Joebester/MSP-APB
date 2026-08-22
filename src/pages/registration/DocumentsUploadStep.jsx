@@ -231,6 +231,7 @@ export default function DocumentsUploadStep() {
             title={t("Upload document")}
             variant="document"
             completed={!!data.docFile}
+            file={data.docFile}
             onCapture={() => document.getElementById('doc-file-input').click()}
           />
 
@@ -239,6 +240,7 @@ export default function DocumentsUploadStep() {
             instruction={t("Take selfie holding your passport open to the photo page")}
             variant="selfie"
             completed={!!data.selfieFile}
+            file={data.selfieFile}
             onCapture={() => document.getElementById('selfie-file-input').click()}
           />
 
@@ -249,6 +251,7 @@ export default function DocumentsUploadStep() {
             actionLabel={t("Take Video")}
             actionType="video"
             completed={!!data.videoFile}
+            file={data.videoFile}
             onCapture={() => document.getElementById('video-file-input').click()}
           />
 

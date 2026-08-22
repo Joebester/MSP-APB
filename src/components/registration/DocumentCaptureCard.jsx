@@ -1,4 +1,5 @@
-import { ChevronRight } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ChevronRight, CheckCircle2 } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { icDoc, icKyc2, icKyc3, icCamera, icKyc1 } from '../../constants/assets';
 
@@ -13,11 +14,53 @@ function CornerBrackets() {
   );
 }
 
-function DocumentIllustration({ variant = 'document' }) {
+function DocumentIllustration({ variant = 'document', file = null }) {
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const isVideo = variant === 'video' || (file && file.type && file.type.startsWith('video/'));
+
+  useEffect(() => {
+    if (!file) {
+      setPreviewUrl(null);
+      return;
+    }
+
+    if (typeof file === 'string') {
+      setPreviewUrl(file);
+      return;
+    }
+
+    if (file instanceof File || file instanceof Blob) {
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+      return () => URL.revokeObjectURL(url);
+    }
+  }, [file]);
+
   let assetSrc = icDoc;
   if (variant === 'selfie') assetSrc = icKyc2;
   else if (variant === 'video') assetSrc = icKyc3;
   else if (variant === 'kyc1') assetSrc = icKyc1;
+
+  if (previewUrl) {
+    return (
+      <div className="relative mx-auto flex min-h-[140px] max-w-sm items-center justify-center overflow-hidden rounded-xl border-2 border-teal-500/40 bg-gray-900/5 p-1 shadow-inner">
+        {isVideo ? (
+          <video
+            src={previewUrl}
+            controls
+            playsInline
+            className="max-h-48 w-full rounded-lg object-contain"
+          />
+        ) : (
+          <img
+            src={previewUrl}
+            alt="Uploaded Preview"
+            className="max-h-48 max-w-full rounded-lg object-contain shadow-sm"
+          />
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="relative mx-auto flex h-28 w-44 items-center justify-center p-2">
@@ -38,6 +81,7 @@ export function DocumentCaptureCard({
   actionLabel = 'Take Photo',
   actionType = 'photo',
   completed = false,
+  file = null,
   onCapture,
 }) {
   return (
@@ -46,20 +90,21 @@ export function DocumentCaptureCard({
       {instruction && (
         <p className="text-xs text-gray-500">{instruction}</p>
       )}
-      <div className="rounded-xl bg-gray-100 px-4 py-6">
-        <DocumentIllustration variant={variant} />
+      <div className="rounded-xl bg-gray-100 px-4 py-5 transition hover:bg-gray-100/90">
+        <DocumentIllustration variant={variant} file={file} />
         <div className="mt-4 flex justify-center">
           <Button
             type="button"
             onClick={onCapture}
-            className={`gap-2 bg-teal-600 px-6 hover:bg-teal-700 ${completed ? 'opacity-80' : ''}`}
+            className={`gap-2 bg-teal-600 px-6 hover:bg-teal-700 ${completed ? 'bg-teal-700' : ''}`}
           >
             <img src={icCamera} alt="Camera" className="h-4 w-4 object-contain brightness-0 invert" />
-            {completed ? 'Retake' : actionLabel}
+            {completed ? (variant === 'video' ? 'Retake Video' : 'Retake Photo') : actionLabel}
           </Button>
         </div>
         {completed && (
-          <p className="mt-2 text-center text-xs font-medium text-msp-green">
+          <p className="mt-2 text-center text-xs font-semibold text-msp-green flex items-center justify-center gap-1.5">
+            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
             Captured successfully
           </p>
         )}

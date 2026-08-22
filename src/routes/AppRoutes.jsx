@@ -80,6 +80,7 @@ export function AppRoutes() {
       <Route path="/pin" element={<SetPinStep />} />
       <Route path="/security-questions" element={<SecurityQuestionsStep />} />
       <Route path="/confirm" element={<ConfirmRegistration />} />
+      <Route path="/review" element={<ConfirmSubmitStep />} />
 
       {/* Protected Token-Required Routes */}
       <Route
@@ -111,14 +112,6 @@ export function AppRoutes() {
         element={
           <ProtectedRoute>
             <DocumentsUploadStep />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/review"
-        element={
-          <ProtectedRoute>
-            <ConfirmSubmitStep />
           </ProtectedRoute>
         }
       />

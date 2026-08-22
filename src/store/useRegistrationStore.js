@@ -39,22 +39,19 @@ export const useRegistrationStore = create((set) => ({
         },
       });
 
-      if (response.status === 200) {
-        if (response.data?.code === 200 && response.data?.success) {
-          toast.success(response.data?.message);
-          return true
-        } else {
-          toast.error(response.data?.message);
-          return false
-        }
-        console.log(response.data)
-        // toast.success(response.data?.header?.message || 'Failed to send OTP');
+      const code = response.data?.code;
+      const ok = response.status === 200 && (code === '0000' || code === '00' || code === 200 || code === '200' || response.data?.success === true || response.data?.success === 'true');
+
+      if (ok) {
+        toast.success(response.data?.message || 'Info saved');
         return true;
       } else {
-        throw new Error(response.data?.message || 'Failed to submit info');
+        toast.error(response.data?.message || 'Failed to submit info');
+        return false;
       }
     } catch (err) {
       set({ error: err.message });
+      toast.error(err?.response?.data?.message || err.message || 'Failed to submit info');
       return false;
     } finally {
       set({ submitting: false });
