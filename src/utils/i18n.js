@@ -140,6 +140,9 @@ const resources = {
             "Thank you for completing your KYC verification. Your identity has been verified successfully.": "Thank you for completing your KYC verification. Your identity has been verified successfully.",
             "Checking KYC status...": "Checking KYC status...",
             "Verified": "Verified",
+            "Issue date cannot be in the future": "Issue date cannot be in the future",
+            "Document has expired": "Document has expired",
+            "Expiration date must be after issue date": "Expiration date must be after issue date",
         },
     },
     la: {
@@ -279,6 +282,9 @@ const resources = {
             "Thank you for completing your KYC verification. Your identity has been verified successfully.": "ຂອບໃຈທີ່ທ່ານໄດ້ສຳເລັດການຢືນຢັນ KYC. ຕົວຕົນຂອງທ່ານໄດ້ຮັບການຢືນຢັນສຳເລັດແລ້ວ.",
             "Checking KYC status...": "ກຳລັງກວດສອບສະຖານະ KYC...",
             "Verified": "ຢືນຢັນແລ້ວ",
+            "Issue date cannot be in the future": "ວັນທີອອກເອກະສານບໍ່ສາມາດເປັນວັນທີໃນອະນາຄົດໄດ້",
+            "Document has expired": "ເອກະສານໝົດອາຍຸແລ້ວ",
+            "Expiration date must be after issue date": "ວັນທີໝົດອາຍຸຕ້ອງຫຼັງຈາກວັນທີອອກເອກະສານ",
         },
     },
 };

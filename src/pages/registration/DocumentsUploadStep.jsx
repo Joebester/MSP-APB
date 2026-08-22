@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { Calendar, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import dayjs from 'dayjs';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { StepFooter } from '../../components/layout/StepFooter';
 import { Input } from '../../components/ui/Input';
@@ -34,8 +35,41 @@ export default function DocumentsUploadStep() {
     .filter((field) => field.required)
     .every((field) => data[field.key]?.trim());
 
+  // Issue date validation (cannot be in the future)
+  const getIssueDateError = () => {
+    if (!data.documentIssueDate) return null;
+    const issue = dayjs(data.documentIssueDate);
+    const today = dayjs().startOf('day');
+    if (issue.isAfter(today)) {
+      return t('Issue date cannot be in the future');
+    }
+    return null;
+  };
+
+  // Expiration date validation (cannot be in the past & must be after issue date)
+  const getExpirationDateError = () => {
+    if (!data.documentExpirationDate) return null;
+    const exp = dayjs(data.documentExpirationDate);
+    const today = dayjs().startOf('day');
+    if (exp.isBefore(today)) {
+      return t('Document has expired');
+    }
+    if (data.documentIssueDate) {
+      const issue = dayjs(data.documentIssueDate);
+      if (exp.isBefore(issue) || exp.isSame(issue)) {
+        return t('Expiration date must be after issue date');
+      }
+    }
+    return null;
+  };
+
+  const issueDateError = getIssueDateError();
+  const expirationDateError = getExpirationDateError();
+
   const canProceed =
     requiredFieldsFilled &&
+    !issueDateError &&
+    !expirationDateError &&
     data.docFile &&
     data.selfieFile &&
     data.videoFile;
@@ -118,16 +152,47 @@ export default function DocumentsUploadStep() {
               </div>
             </div>
 
-            {docConfig.fields.map((field) => (
-              <Input
-                key={field.key}
-                label={t(field.label)}
-                required={field.required}
-                placeholder={t(field.placeholder)}
-                value={data[field.key] || ''}
-                onChange={(e) => updateData({ [field.key]: e.target.value })}
-              />
-            ))}
+            {docConfig.fields.map((field) => {
+              if (field.type === 'date') {
+                const errorMsg = field.key === 'documentIssueDate' ? issueDateError : expirationDateError;
+                return (
+                  <div key={field.key} className="w-full">
+                    <label className="mb-1.5 block text-sm font-semibold text-gray-900">
+                      {t(field.label)}
+                      {field.required && <span className="text-red-500">*</span>}
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="date"
+                        value={data[field.key] || ''}
+                        onChange={(e) => updateData({ [field.key]: e.target.value })}
+                        className={`w-full rounded-lg border bg-gray-100 px-4 py-3 pr-10 text-sm text-gray-900 outline-none transition focus:border-msp-green focus:ring-2 focus:ring-msp-green/20 ${
+                          errorMsg ? 'border-red-500 bg-red-50/50 focus:border-red-500 focus:ring-red-500/20' : 'border-gray-200'
+                        }`}
+                      />
+                      <Calendar
+                        className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    {errorMsg && (
+                      <p className="mt-1.5 text-xs font-medium text-red-500">{errorMsg}</p>
+                    )}
+                  </div>
+                );
+              }
+
+              return (
+                <Input
+                  key={field.key}
+                  label={t(field.label)}
+                  required={field.required}
+                  placeholder={t(field.placeholder)}
+                  value={data[field.key] || ''}
+                  onChange={(e) => updateData({ [field.key]: e.target.value })}
+                />
+              );
+            })}
           </section>
 
           <input
