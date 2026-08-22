@@ -20,10 +20,20 @@ export default function DocumentsUploadStep() {
   const isEmailRegister = data?.isEmailRegister || localStorage.getItem('is_email_register') === 'true';
 
   useEffect(() => {
+    const updates = {};
     if (isEmailRegister && data.documentType !== 'passport') {
-      updateData({ documentType: 'passport' });
+      updates.documentType = 'passport';
     }
-  }, [isEmailRegister, data.documentType, updateData]);
+    if (!data.documentIssueDate) {
+      updates.documentIssueDate = dayjs().subtract(5, 'year').format('YYYY-MM-DD');
+    }
+    if (!data.documentExpirationDate) {
+      updates.documentExpirationDate = dayjs().add(5, 'year').format('YYYY-MM-DD');
+    }
+    if (Object.keys(updates).length > 0) {
+      updateData(updates);
+    }
+  }, [isEmailRegister, data.documentType, data.documentIssueDate, data.documentExpirationDate, updateData]);
 
   const availableDocTypes = Object.entries(DOCUMENT_TYPES).filter(
     ([key]) => !isEmailRegister || key === 'passport'
@@ -161,17 +171,17 @@ export default function DocumentsUploadStep() {
                       {t(field.label)}
                       {field.required && <span className="text-red-500">*</span>}
                     </label>
-                    <div className="relative">
+                    <div className="relative w-full">
                       <input
                         type="date"
                         value={data[field.key] || ''}
                         onChange={(e) => updateData({ [field.key]: e.target.value })}
-                        className={`w-full rounded-lg border bg-gray-100 px-4 py-3 pr-10 text-sm text-gray-900 outline-none transition focus:border-msp-green focus:ring-2 focus:ring-msp-green/20 ${
+                        className={`w-full min-h-[46px] appearance-none rounded-lg border bg-gray-100 px-4 py-3 pr-10 text-sm font-medium text-gray-900 outline-none transition focus:border-msp-green focus:ring-2 focus:ring-msp-green/20 ${
                           errorMsg ? 'border-red-500 bg-red-50/50 focus:border-red-500 focus:ring-red-500/20' : 'border-gray-200'
                         }`}
                       />
                       <Calendar
-                        className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
+                        className="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400"
                         aria-hidden="true"
                       />
                     </div>
