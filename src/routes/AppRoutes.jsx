@@ -13,6 +13,7 @@ import SecurityQuestionsStep from '../pages/registration/SecurityQuestionsStep';
 import ConfirmRegistration from '../pages/registration/ConfirmRegistration';
 import ConfirmSubmitStep from '../pages/registration/ConfirmSubmitStep';
 import KycCheckPage from '../pages/registration/KycCheckPage';
+import { ProtectedRoute } from './ProtectedRoute';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { getLanguageFromUrl } from '../utils/lang';
@@ -44,24 +45,67 @@ export function AppRoutes() {
 
   return (
     <Routes>
-      {/* <Route path="/" element={<Navigate to="/" replace />} /> */}
-
+      {/* Public Unauthenticated Routes */}
       <Route path="/" element={<RegistrationIntro />} />
       <Route path="/register" element={<RegistrationIntro />} />
       <Route path="/policy" element={<PolicyPage />} />
       <Route path="/verify" element={<VerifyStep />} />
-      <Route path="/details" element={<GeneralDetailsStep />} />
-      <Route path="/kyc-check" element={<KycCheckPage />} />
-      <Route path="/kyc" element={<KycStep />} />
-      <Route path="/kyc/meporm" element={<KycMepormStep />} />
-      <Route path="/documents" element={<DocumentsUploadStep />} />
-      <Route path="/pin" element={<SetPinStep />} />
-      <Route path="/security-questions" element={<SecurityQuestionsStep />} />
       <Route path="/terms" element={<TermsPage />} />
       <Route path="/register/terms" element={<TermsPage />} />
+      <Route path="/details" element={<GeneralDetailsStep />} />
+      <Route path="/pin" element={<SetPinStep />} />
+      <Route path="/security-questions" element={<SecurityQuestionsStep />} />
       <Route path="/confirm" element={<ConfirmRegistration />} />
-      <Route path="/review" element={<ConfirmSubmitStep />} />
-      <Route path="/success" element={<RegistrationSuccess />} />
+
+      {/* Protected Token-Required Routes */}
+      <Route
+        path="/kyc-check"
+        element={
+          <ProtectedRoute>
+            <KycCheckPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/kyc"
+        element={
+          <ProtectedRoute>
+            <KycStep />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/kyc/meporm"
+        element={
+          <ProtectedRoute>
+            <KycMepormStep />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/documents"
+        element={
+          <ProtectedRoute>
+            <DocumentsUploadStep />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/review"
+        element={
+          <ProtectedRoute>
+            <ConfirmSubmitStep />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/success"
+        element={
+          <ProtectedRoute>
+            <RegistrationSuccess />
+          </ProtectedRoute>
+        }
+      />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
