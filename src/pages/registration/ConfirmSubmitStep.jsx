@@ -28,11 +28,11 @@ export default function ConfirmSubmitStep() {
     if (isKycMode) {
       setSubmittingKyc(true);
       const typeMap = {
-        passport: 1,
-        id_card: 2,
+        passport: 2,
+        id_card: 1,
         census: 3,
       };
-      const typeId = typeMap[data.documentType] || 1;
+      const typeId = typeMap[data.documentType] || 2;
       const rfDocNo = data.documentNumber;
       const exp = data.documentExpirationDate || '2030-12-31';
 
