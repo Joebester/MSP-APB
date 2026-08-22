@@ -188,15 +188,15 @@ export default function GeneralDetailsStep() {
               <label className="mb-1.5 block text-sm font-semibold text-gray-900">
                 <Trans>Date of Birth</Trans><span className="text-red-500">*</span>
               </label>
-              <div className="relative">
+              <div className="relative w-full">
                 <input
                   type="date"
                   value={data.dateOfBirth}
                   onChange={(e) => updateData({ dateOfBirth: e.target.value })}
-                  className="w-full rounded-lg border border-gray-200 bg-gray-100 px-4 py-3 pr-10 text-sm text-gray-900 outline-none transition focus:border-msp-green focus:ring-2 focus:ring-msp-green/20"
+                  className="w-full min-h-[46px] appearance-none rounded-lg border border-gray-200 bg-gray-100 px-4 py-3 pr-10 text-sm font-medium text-gray-900 outline-none transition focus:border-msp-green focus:ring-2 focus:ring-msp-green/20"
                 />
                 <Calendar
-                  className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
+                  className="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400"
                   aria-hidden="true"
                 />
               </div>
