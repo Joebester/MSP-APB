@@ -19,7 +19,9 @@ function KycIllustration() {
 
 export default function KycStep() {
   const navigate = useNavigate();
-  const { updateData } = useRegistration();
+  const { data, updateData } = useRegistration();
+
+  const isEmailRegister = data?.isEmailRegister || localStorage.getItem('is_email_register') === 'true';
 
   // alert(window.location.href)
 
@@ -45,16 +47,24 @@ export default function KycStep() {
           </p>
 
           <div className="mt-8 space-y-4">
-            <KycOptionCard
-              icon={icMeporm}
-              title={<Trans>Verify by APB Meporm</Trans>}
-              subtitle={<Trans>Reference your account APB Meporm already</Trans>}
-              onClick={() => handleSelect('meporm')}
-            />
+            {!isEmailRegister && (
+              <KycOptionCard
+                icon={icMeporm}
+                title={<Trans>Verify by APB Meporm</Trans>}
+                subtitle={<Trans>Reference your account APB Meporm already</Trans>}
+                onClick={() => handleSelect('meporm')}
+              />
+            )}
             <KycOptionCard
               icon={icDoc}
               title={<Trans>Verify by Documents</Trans>}
-              subtitle={<Trans>Identity document, Census number, Passport</Trans>}
+              subtitle={
+                isEmailRegister ? (
+                  <Trans>Passport</Trans>
+                ) : (
+                  <Trans>Identity document, Census number, Passport</Trans>
+                )
+              }
               onClick={() => handleSelect('documents')}
             />
           </div>

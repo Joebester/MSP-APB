@@ -35,8 +35,14 @@ export default function KycCheckPage() {
           setChecked(true);
         } else {
           // KYC not yet verified — continue flow
-          if (result.username) {
-            updateData({ customerCode: result.username });
+          const isEmailReg = result.email === true || result.email === 'true';
+          localStorage.setItem('is_email_register', isEmailReg ? 'true' : 'false');
+
+          if (result.username || isEmailReg) {
+            updateData({
+              ...(result.username ? { customerCode: result.username } : {}),
+              isEmailRegister: isEmailReg,
+            });
           }
           setChecked(true);
           // Auto-navigate to KYC option selection (Meporm or Documents)

@@ -51,6 +51,7 @@ const defaultState = {
   provinceName: "",
   districtName: "",
   villageName: "",
+  isEmailRegister: localStorage.getItem('is_email_register') === 'true',
 };
 
 const RegistrationContext = createContext(null);
