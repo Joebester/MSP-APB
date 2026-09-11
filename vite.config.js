@@ -7,7 +7,7 @@ export default defineConfig(({ command }) => ({
   base: '/msp-register/',
   plugins: [react(), tailwindcss()],
   server: {
-    host: '10.2.6.177',
+    host: '10.2.6.179',
     port: 1234,
     proxy: {
       '/api': {

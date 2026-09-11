@@ -7,6 +7,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
+# ARG ENV_FILE=.env.prod
+
 # Copy source files and build
 COPY . .
 # ARG BUILD_MODE=uat

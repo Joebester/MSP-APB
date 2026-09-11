@@ -23,6 +23,8 @@ export default function KycStep() {
 
   const isEmailRegister = data?.isEmailRegister || localStorage.getItem('is_email_register') === 'true';
 
+  // alert(window.location.href)
+
   const handleSelect = (method) => {
     updateData({ kycMethod: method });
     const lang = localStorage.getItem('lang') || 'la';

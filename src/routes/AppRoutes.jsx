@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { getAccessToken } from '../utils/auth';
 import { getLanguageFromUrl } from '../utils/lang';
+import { readTokenFromUrl } from '../utils/token';
 
 export function AppRoutes() {
   const url = useParams();
@@ -26,20 +27,44 @@ export function AppRoutes() {
   const [lang, setLang] = useState(() => getLanguageFromUrl());
 
   useEffect(() => {
-    const currentLang = getLanguageFromUrl();
-    setLang(currentLang);
-    if (i18n.language !== currentLang) {
-      i18n.changeLanguage(currentLang);
+    const supported = ['en', 'la'];
+    const params = new URLSearchParams(window.location.search);
+    let langParam = params.get('langCode') || params.get('lang');
+
+    if(langParam === "LA"){
+        langParam = "la"
+    }else if (langParam === "EN"){
+        langParam = "en"
     }
 
-    getAccessToken();
 
-    const params = new URLSearchParams(window.location.search);
-    const profileParam = params.get('profileId') || params.get('profile');
+    if (langParam && supported.includes(langParam)) {
+      setLang(langParam);
+      i18n.changeLanguage(langParam);
+      localStorage.setItem("lang", langParam);
+    } else {
+      try {
+        const fallback = search.split("=")[1];
+        if (fallback && supported.includes(fallback)) {
+          setLang(fallback);
+          i18n.changeLanguage(fallback);
+          localStorage.setItem("lang", fallback);
+        }
+      } catch (error) {
+        setLang("la");
+        localStorage.setItem("lang", "la");
+      }
+    }
+
+    readTokenFromUrl();
+
+    const params1 = new URLSearchParams(window.location.search);
+    const profileParam = params1.get('profileId') || params1.get('profile');
     if (profileParam) {
       localStorage.setItem('register_profile', JSON.stringify(profileParam));
     }
-  }, [i18n, search]);
+    
+  }, [lang, i18n, search]);
 
   return (
     <Routes>

@@ -1,6 +1,6 @@
 import CryptoJS from 'crypto-js';
 
-const ENCRYPTION_KEY = '3F4428472B4B6250655368566D597133';
+const ENCRYPTION_KEY = import.meta.env.VITE_ENCRYPTION_KEY;
 
 function getSecretKey() {
   return CryptoJS.SHA256(ENCRYPTION_KEY);
