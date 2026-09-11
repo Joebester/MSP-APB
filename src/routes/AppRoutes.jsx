@@ -17,6 +17,7 @@ import { ProtectedRoute } from './ProtectedRoute';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { getLanguageFromUrl } from '../utils/lang';
+import { readTokenFromUrl } from '../utils/token';
 
 export function AppRoutes() {
   const url = useParams();
@@ -54,12 +55,9 @@ export function AppRoutes() {
       }
     }
 
-    const params1 = new URLSearchParams(window.location.search);
-    const tokenParam = params1.get('token') || params.get('accessToken');
-    if (tokenParam) {
-      localStorage.setItem('access_token', tokenParam);
-    }
+    readTokenFromUrl();
 
+    const params1 = new URLSearchParams(window.location.search);
     const profileParam = params1.get('profileId') || params1.get('profile');
     if (profileParam) {
       localStorage.setItem('register_profile', JSON.stringify(profileParam));

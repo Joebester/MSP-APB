@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import api from '../utils/API';
+import { getAccessToken } from '../utils/token';
 
 const getGatewayUrl = (path) => {
   const base = api.defaults.baseURL || '';
@@ -24,7 +25,7 @@ export const useKycCheckStore = create((set) => ({
   checkKyc: async () => {
     set({ loading: true, error: null, verifiedDoc: null, verifiedQt: null, username: null });
     try {
-      const token = localStorage.getItem('access_token');
+      const token = getAccessToken();
       console.log('[KYC Check] Token:', token ? `${token.substring(0, 20)}...` : 'MISSING');
       console.log('[KYC Check] URL:', getGatewayUrl('check/kyc'));
 
