@@ -16,6 +16,7 @@ import KycCheckPage from '../pages/registration/KycCheckPage';
 import { ProtectedRoute } from './ProtectedRoute';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
+import { getAccessToken } from '../utils/auth';
 import { getLanguageFromUrl } from '../utils/lang';
 
 export function AppRoutes() {
@@ -31,12 +32,9 @@ export function AppRoutes() {
       i18n.changeLanguage(currentLang);
     }
 
-    const params = new URLSearchParams(window.location.search);
-    const tokenParam = params.get('token') || params.get('accessToken');
-    if (tokenParam) {
-      localStorage.setItem('access_token', tokenParam);
-    }
+    getAccessToken();
 
+    const params = new URLSearchParams(window.location.search);
     const profileParam = params.get('profileId') || params.get('profile');
     if (profileParam) {
       localStorage.setItem('register_profile', JSON.stringify(profileParam));

@@ -1,4 +1,3 @@
-import { Trans } from 'react-i18next';
 import { Button } from '../ui/Button';
 
 export function StepFooter({
@@ -39,7 +38,7 @@ export function StepFooter({
             size="lg"
             onClick={onBack}
           >
-            <Trans>{backLabel}</Trans>
+            {backLabel}
           </Button>
         )}
         <Button
@@ -48,7 +47,7 @@ export function StepFooter({
           onClick={onNext}
           disabled={nextDisabled}
         >
-          <Trans>{nextLabel}</Trans>
+          {nextLabel}
         </Button>
       </div>
     </footer>

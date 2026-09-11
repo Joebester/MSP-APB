@@ -27,6 +27,9 @@ const defaultState = {
   documentNumber: '',
   documentIssueDate: dayjs().subtract(5, 'year').format('YYYY-MM-DD'),
   documentExpirationDate: dayjs().add(5, 'year').format('YYYY-MM-DD'),
+  docFile: null,
+  selfieFile: null,
+  videoFile: null,
   documentPhotoTaken: false,
   selfiePhotoTaken: false,
   videoShortTaken: false,
@@ -84,64 +87,31 @@ export function RegistrationProvider({ children }) {
 
   const updateData = useCallback((updates) => {
     if (updates?.phone?.length > 10 || updates?.otp?.length > 6 || updates?.emailOtp?.length > 6) {
-
-    } else {
-      // console.log(updates.dateOfBirth)
-      if (isUnder18(updates.dateOfBirth)) {
-        setData((prev) => ({ ...prev, ...updates, alertDOB: true }));
-      } else {
-        if (updateData.dateOfBirth !== '' || updates.dateOfBirth !== undefined) {
-          setData((prev) => ({ ...prev, ...updates, alertDOB: false }));
-        }
-
-      }
-
-      if (updates?.email != '') {
-        const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(updates?.email);
-        setData((prev) => ({ ...prev, ...updates, emailAlert: ok }))
-      }
-      if (updates.firstName == '') {
-        setData((prev) => ({ ...prev, ...updates, alertFirstName: true }))
-      }
-      if (updates.lastName == '') {
-        setData((prev) => ({ ...prev, ...updates, alertLastName: true }))
-      }
-      if (updates.firstNameEn == '') {
-        setData((prev) => ({ ...prev, ...updates, alertFirstNameEn: true }))
-      }
-      if (updates.lastNameEn == '') {
-        setData((prev) => ({ ...prev, ...updates, alertLastNameEn: true }))
-      }
-      if (updates.province == '') {
-        setData((prev) => ({ ...prev, ...updates, alertProvince: true }))
-      }
-      if (updates.district == '') {
-        setData((prev) => ({ ...prev, ...updates, alertDistrict: true }))
-      }
-      if (updates.village == '') {
-        setData((prev) => ({ ...prev, ...updates, alertVillage: true }))
-      }
-      if (updates.occupation == '') {
-        setData((prev) => ({ ...prev, ...updates, alertOccupation: true }))
-      }
-      // console.log(isUnder18(updates.dateOfBirth))
-      // if (isUnder18(updates.dateOfBirth)) {
-      //   setData((prev) => ({ ...prev, ...updates, alertDOB: true }))
-      // }
-      // else {
-      //   setData((prev) => ({ ...prev, ...updates, alertDOB: false }))
-      // }
+      return;
     }
 
-    // if (updates?.phone?.length <= 10) {
-    //   setData((prev) => ({ ...prev, ...updates }));
-    // }
-    // if (updates?.otp?.length <= 4) {
-    //   setData((prev) => ({ ...prev, ...updates }));
-    // }
-    // if (updates?.country?.length <= 0) {
-    //   setData((prev) => ({ ...prev, ...updates }));
-    // }
+    setData((prev) => {
+      const next = { ...prev, ...updates };
+
+      if (updates.dateOfBirth !== undefined) {
+        next.alertDOB = isUnder18(updates.dateOfBirth);
+      }
+
+      if (updates.email !== undefined && updates.email !== '') {
+        next.emailAlert = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(updates.email);
+      }
+
+      if (updates.firstName === '') next.alertFirstName = true;
+      if (updates.lastName === '') next.alertLastName = true;
+      if (updates.firstNameEn === '') next.alertFirstNameEn = true;
+      if (updates.lastNameEn === '') next.alertLastNameEn = true;
+      if (updates.province === '') next.alertProvince = true;
+      if (updates.district === '') next.alertDistrict = true;
+      if (updates.village === '') next.alertVillage = true;
+      if (updates.occupation === '') next.alertOccupation = true;
+
+      return next;
+    });
   }, []);
 
   const updateDataSelect = useCallback((updates) => {

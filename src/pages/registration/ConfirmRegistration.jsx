@@ -25,9 +25,9 @@ export default function ConfirmRegistration() {
   const { data, updateData, fullName } = useRegistration();
   const { submitInfo, submitting } = useRegistrationStore();
 
-  const stored = localStorage.getItem('register_profile'); // '"71A8...:4E2C..."'
-  const raw = JSON.parse(stored); // → "71A8...:4E2C..." (quotes removed)
-  const u_id = aesDecrypt(raw);
+  const stored = localStorage.getItem('register_profile');
+  const raw = stored ? JSON.parse(stored) : null;
+  const u_id = raw ? aesDecrypt(raw) : '';
 
   const lang = localStorage.getItem('lang') || 'la';
 

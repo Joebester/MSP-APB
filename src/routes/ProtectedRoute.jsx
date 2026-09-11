@@ -1,15 +1,9 @@
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+import { getAccessToken } from '../utils/auth';
 import { getLanguageFromUrl } from '../utils/lang';
 
 export function ProtectedRoute({ children }) {
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-
-  const tokenFromUrl = searchParams.get('token') || searchParams.get('accessToken');
-  const tokenFromStorage = localStorage.getItem('access_token');
-
-  const token = tokenFromUrl || tokenFromStorage;
-  const hasToken = Boolean(token && token !== 'null' && token !== 'undefined');
+  const hasToken = Boolean(getAccessToken());
 
   if (!hasToken) {
     const lang = getLanguageFromUrl();
