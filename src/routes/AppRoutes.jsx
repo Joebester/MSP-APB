@@ -16,6 +16,7 @@ import KycCheckPage from '../pages/registration/KycCheckPage';
 import { ProtectedRoute } from './ProtectedRoute';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
+import { getAccessToken } from '../utils/auth';
 import { getLanguageFromUrl } from '../utils/lang';
 import { readTokenFromUrl } from '../utils/token';
 

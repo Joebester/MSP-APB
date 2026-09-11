@@ -1,5 +1,6 @@
 // api.js
 import axios from 'axios';
+import { getAccessToken } from './auth';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_DEFUALT_API_URL,
@@ -14,8 +15,8 @@ api.interceptors.request.use(
   (config) => {
     const lang = localStorage.getItem('lang') === "la" ? 'LO': 'EN';
     config.headers['langCode'] = lang;
-    const token = localStorage.getItem('access_token');
-    if (token && token !== 'null' && token !== 'undefined') {
+    const token = getAccessToken();
+    if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
     return config;

@@ -6,6 +6,7 @@ import { GradientBackground } from '../../components/registration/GradientBackgr
 import { MspLogo } from '../../components/brand/MspLogo';
 import { Trans } from 'react-i18next';
 import { icDoc, icCamera } from '../../constants/assets';
+import { clearAccessToken } from '../../utils/auth';
 import { getLanguageFromUrl } from '../../utils/lang';
 
 const requirements = [
@@ -19,7 +20,7 @@ export default function RegistrationIntro() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    localStorage.removeItem('access_token');
+    clearAccessToken();
     localStorage.removeItem('register_profile');
     getLanguageFromUrl();
   }, []);

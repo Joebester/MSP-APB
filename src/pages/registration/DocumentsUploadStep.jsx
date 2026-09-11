@@ -43,7 +43,7 @@ export default function DocumentsUploadStep() {
 
   const requiredFieldsFilled = docConfig.fields
     .filter((field) => field.required)
-    .every((field) => data[field.key]?.trim());
+    .every((field) => String(data[field.key] ?? '').trim());
 
   // Issue date validation (cannot be in the future)
   const getIssueDateError = () => {

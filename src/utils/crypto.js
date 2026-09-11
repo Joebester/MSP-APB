@@ -34,7 +34,15 @@ export function aesEncrypt(plainText) {
 }
 
 export function aesDecrypt(encryptedText) {
+  if (typeof encryptedText !== 'string' || !encryptedText.includes(':')) {
+    return '';
+  }
+
   const [ivHex, cipherHex] = encryptedText.split(':');
+
+  if (!ivHex || !cipherHex) {
+    return '';
+  }
 
   const key = getSecretKey();
 

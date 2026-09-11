@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import api from '../utils/API';
+import { getAccessToken, setAccessToken } from '../utils/auth';
 import { aesEncrypt, aesDecrypt } from '../utils/crypto';
 import toast from 'react-hot-toast';
 
@@ -82,7 +83,7 @@ export const useRegistrationStore = create((set) => ({
       if (ok) {
         const token = response.data?.data?.accessToken;
         if (token) {
-          localStorage.setItem('access_token', token);
+          setAccessToken(token);
         }
         toast.success(response.data?.message || 'Registration confirmed successfully');
         return true;
@@ -108,7 +109,7 @@ export const useRegistrationStore = create((set) => ({
       const response = await api.put(getGatewayUrl('/api/v1/msp/question/newQuestion'), payload, {
         baseURL: '',
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          Authorization: `Bearer ${getAccessToken()}`,
         },
       });
 
@@ -146,7 +147,7 @@ export const useRegistrationStore = create((set) => ({
         baseURL: '',
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          Authorization: `Bearer ${getAccessToken()}`,
         },
       });
 
@@ -171,7 +172,7 @@ export const useRegistrationStore = create((set) => ({
       const response = await api.post(getGatewayUrl('/api/v1/msp/signup/auth/doc/submit'), {}, {
         baseURL: '',
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          Authorization: `Bearer ${getAccessToken()}`,
         },
       });
 
@@ -203,7 +204,7 @@ export const useRegistrationStore = create((set) => ({
         baseURL: '',
         headers: {
           'X-MSP-DATA-Signature': signature,
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          Authorization: `Bearer ${getAccessToken()}`,
         },
       });
 

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import api from '../utils/API';
+
 import { getAccessToken } from '../utils/token';
 
 const getGatewayUrl = (path) => {
