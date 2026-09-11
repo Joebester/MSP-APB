@@ -26,14 +26,14 @@ export const useKycCheckStore = create((set) => ({
     try {
       const token = localStorage.getItem('access_token');
       console.log('[KYC Check] Token:', token ? `${token.substring(0, 20)}...` : 'MISSING');
-      console.log('[KYC Check] URL:', getGatewayUrl('/api/v1/msp/signup/check/kyc'));
+      console.log('[KYC Check] URL:', getGatewayUrl('check/kyc'));
 
       if (!token) {
         set({ error: 'No access token found', loading: false });
         return null;
       }
 
-      const response = await api.get(getGatewayUrl('/api/v1/msp/signup/check/kyc'), {
+      const response = await api.get(getGatewayUrl('check/kyc'), {
         baseURL: '',
         headers: {
           Authorization: `Bearer ${token}`,
