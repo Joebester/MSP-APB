@@ -82,6 +82,7 @@ export function DocumentCaptureCard({
   actionType = 'photo',
   completed = false,
   file = null,
+  sizeHint = null,
   onCapture,
 }) {
   return (
@@ -89,6 +90,9 @@ export function DocumentCaptureCard({
       <h3 className="text-sm font-bold text-gray-900">{title}</h3>
       {instruction && (
         <p className="text-xs text-gray-500">{instruction}</p>
+      )}
+      {sizeHint && (
+        <p className="text-xs text-gray-400">{sizeHint}</p>
       )}
       <div className="rounded-xl bg-gray-100 px-4 py-5 transition hover:bg-gray-100/90">
         <DocumentIllustration variant={variant} file={file} />

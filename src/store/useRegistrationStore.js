@@ -2,20 +2,8 @@ import { create } from 'zustand';
 import api from '../utils/API';
 import { getAccessToken, setAccessToken } from '../utils/auth';
 import { aesEncrypt, aesDecrypt } from '../utils/crypto';
+import { getGatewayUrl } from '../utils/gateway';
 import toast from 'react-hot-toast';
-
-const getGatewayUrl = (path) => {
-  const base = api.defaults.baseURL || '';
-  if (base.startsWith('/')) {
-    return path;
-  }
-  try {
-    const origin = new URL(base, window.location.origin).origin;
-    return `${origin}${path}`;
-  } catch (e) {
-    return path;
-  }
-};
 
 export const useRegistrationStore = create((set) => ({
   submitting: false,

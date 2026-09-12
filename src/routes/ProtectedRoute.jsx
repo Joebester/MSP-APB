@@ -13,8 +13,8 @@ export function ProtectedRoute({ children }) {
 
   if (!hasToken) {
     const lang = getLanguageFromUrl();
-    console.warn('[ProtectedRoute] Access denied: No access token found. Redirecting to home.');
-    return <Navigate to={`/?langCode=${lang}`} replace />;
+    console.warn('[ProtectedRoute] Access denied: No access token found. Redirecting to token-not-found.');
+    return <Navigate to={`/token-not-found?langCode=${lang}`} replace />;
   }
 
   return children;

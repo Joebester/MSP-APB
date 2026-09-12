@@ -10,7 +10,13 @@ import { OnboardingHeader } from '../../components/registration/OnboardingHeader
 import { StepIndicator } from '../../components/registration/StepIndicator';
 import { DOCUMENT_TYPES } from '../../constants/registration';
 import { useRegistration } from '../../context/RegistrationContext';
+import {
+  getFileSizeError,
+  MAX_IMAGE_SIZE_MB,
+  MAX_VIDEO_SIZE_MB,
+} from '../../utils/fileValidation';
 import { useTranslation, Trans } from 'react-i18next';
+import toast from 'react-hot-toast';
 
 export default function DocumentsUploadStep() {
   const navigate = useNavigate();
@@ -99,26 +105,30 @@ export default function DocumentsUploadStep() {
     });
   };
 
-  const handleDocFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      updateData({ docFile: file, documentPhotoTaken: true });
+  const pickFile = (e, buildUpdate) => {
+    const input = e.target;
+    const file = input.files?.[0];
+    // Reset so re-picking the same file after a rejection still fires onChange.
+    input.value = '';
+    if (!file) return;
+
+    const sizeError = getFileSizeError(file);
+    if (sizeError) {
+      toast.error(t(sizeError.key, sizeError.values));
+      return;
     }
+
+    updateData(buildUpdate(file));
   };
 
-  const handleSelfieFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      updateData({ selfieFile: file, selfiePhotoTaken: true });
-    }
-  };
+  const handleDocFileChange = (e) =>
+    pickFile(e, (file) => ({ docFile: file, documentPhotoTaken: true }));
 
-  const handleVideoFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      updateData({ videoFile: file, videoShortTaken: true });
-    }
-  };
+  const handleSelfieFileChange = (e) =>
+    pickFile(e, (file) => ({ selfieFile: file, selfiePhotoTaken: true }));
+
+  const handleVideoFileChange = (e) =>
+    pickFile(e, (file) => ({ videoFile: file, videoShortTaken: true }));
 
   const handleNext = () => {
     navigate('/review?type=kyc&langCode=' + (localStorage.getItem('lang') || 'la'));
@@ -232,6 +242,7 @@ export default function DocumentsUploadStep() {
             variant="document"
             completed={!!data.docFile}
             file={data.docFile}
+            sizeHint={t('Maximum image size {{max}}MB', { max: MAX_IMAGE_SIZE_MB })}
             onCapture={() => document.getElementById('doc-file-input').click()}
           />
 
@@ -241,6 +252,7 @@ export default function DocumentsUploadStep() {
             variant="selfie"
             completed={!!data.selfieFile}
             file={data.selfieFile}
+            sizeHint={t('Maximum image size {{max}}MB', { max: MAX_IMAGE_SIZE_MB })}
             onCapture={() => document.getElementById('selfie-file-input').click()}
           />
 
@@ -252,6 +264,7 @@ export default function DocumentsUploadStep() {
             actionType="video"
             completed={!!data.videoFile}
             file={data.videoFile}
+            sizeHint={t('Maximum video size {{max}}MB', { max: MAX_VIDEO_SIZE_MB })}
             onCapture={() => document.getElementById('video-file-input').click()}
           />
 

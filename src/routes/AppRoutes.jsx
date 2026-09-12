@@ -13,6 +13,7 @@ import SecurityQuestionsStep from '../pages/registration/SecurityQuestionsStep';
 import ConfirmRegistration from '../pages/registration/ConfirmRegistration';
 import ConfirmSubmitStep from '../pages/registration/ConfirmSubmitStep';
 import KycCheckPage from '../pages/registration/KycCheckPage';
+import TokenNotFound from '../pages/errors/TokenNotFound';
 import { ProtectedRoute } from './ProtectedRoute';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
@@ -79,6 +80,7 @@ export function AppRoutes() {
       <Route path="/security-questions" element={<SecurityQuestionsStep />} />
       <Route path="/confirm" element={<ConfirmRegistration />} />
       <Route path="/review" element={<ConfirmSubmitStep />} />
+      <Route path="/token-not-found" element={<TokenNotFound />} />
 
       {/* Protected Token-Required Routes */}
       <Route
