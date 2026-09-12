@@ -18,7 +18,6 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { getAccessToken } from '../utils/auth';
 import { getLanguageFromUrl } from '../utils/lang';
-import { readTokenFromUrl } from '../utils/token';
 
 export function AppRoutes() {
   const url = useParams();
@@ -56,7 +55,7 @@ export function AppRoutes() {
       }
     }
 
-    readTokenFromUrl();
+    getAccessToken();
 
     const params1 = new URLSearchParams(window.location.search);
     const profileParam = params1.get('profileId') || params1.get('profile');

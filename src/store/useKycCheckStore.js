@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import api from '../utils/API';
 
-import { getAccessToken } from '../utils/token';
+import { getAccessToken } from '../utils/auth';
 
 const getGatewayUrl = (path) => {
   const base = api.defaults.baseURL || '';

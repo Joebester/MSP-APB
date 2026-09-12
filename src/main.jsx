@@ -1,10 +1,10 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
-import { readTokenFromUrl } from './utils/token';
+import { getAccessToken } from './utils/auth';
 import './index.css';
 
-readTokenFromUrl();
+getAccessToken();
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
