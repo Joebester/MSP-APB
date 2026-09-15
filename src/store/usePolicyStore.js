@@ -15,7 +15,7 @@ export const usePolicyStore = create((set, get) => ({
     if (get().condition) return;
     set({ loading: true, error: null });
     try {
-      const response = await api.get('policy');
+      const response = await api.get('public/policy');
       const data = response.data;
 
       const raw = data?.data;

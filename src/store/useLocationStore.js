@@ -1,6 +1,10 @@
 import { create } from 'zustand';
 import api from '../utils/API';
-import api_defualt from '../utils/API_Defualt'
+
+// Address lookups expect the raw lowercase code rather than the LO/EN mapping.
+const rawLangHeaders = () => ({
+  langCode: localStorage.getItem('lang') || 'la',
+});
 
 export const useLocationStore = create((set, get) => ({
   provinces: [],
@@ -17,7 +21,7 @@ export const useLocationStore = create((set, get) => ({
     if (get().provinces.length > 0) return;
     set({ loadingProvinces: true, error: null });
     try {
-      const response = await api_defualt.get('address/state');
+      const response = await api.get('address/state', { headers: rawLangHeaders() });
       if (response.data?.header?.code === "0000") {
         const data = response.data?.body;
         const list = Array.isArray(data) ? data : (data?.list || data?.items || data?.content || []);
@@ -39,7 +43,9 @@ export const useLocationStore = create((set, get) => ({
     }
     set({ loadingCities: true, error: null, cities: [] });
     try {
-      const response = await api_defualt.get(`address/city?stateCode=${pvISO2Code}`);
+      const response = await api.get(`address/city?stateCode=${pvISO2Code}`, {
+        headers: rawLangHeaders(),
+      });
       if (response.data?.header?.code === "0000") {
         const data = response.data?.body;
         const list = Array.isArray(data) ? data : (data?.list || data?.items || data?.content || []);
@@ -58,11 +64,7 @@ export const useLocationStore = create((set, get) => ({
     if (get().prefixes.length > 0) return;
     set({ loadingPrefixes: true, error: null });
     try {
-      const response = await api.get('/prefixes', {
-        headers: {
-          langCode: localStorage.getItem('lang') === "la" ? 'LO': 'EN'
-        },
-      });
+      const response = await api.get('public/prefixes');
       if (response.data?.code === 200 || response.data?.success === true || response.data?.success === 'true') {
         const data = response.data.data;
         const list = Array.isArray(data) ? data : (data?.prefixName || data?.prefixId || data?.prefixCode);
@@ -84,7 +86,7 @@ export const useLocationStore = create((set, get) => ({
     }
     set({ loadingVillages: true, error: null, villages: [] });
     try {
-      const response = await api.get(`/villages/${cityId}`);
+      const response = await api.get(`public/villages/${cityId}`);
       if (response.data?.code === 200 || response.data?.success === true || response.data?.success === 'true') {
         const data = response.data.data;
         const list = Array.isArray(data) ? data : (data?.list || data?.items || data?.content || []);

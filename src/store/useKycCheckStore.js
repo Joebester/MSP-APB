@@ -2,9 +2,6 @@ import { create } from 'zustand';
 import api from '../utils/API';
 
 import { getAccessToken } from '../utils/auth';
-import { getGatewayUrl } from '../utils/gateway';
-
-const KYC_CHECK_PATH = '/api/v1/msp/signup/check/kyc';
 
 export const useKycCheckStore = create((set) => ({
   loading: false,
@@ -18,19 +15,12 @@ export const useKycCheckStore = create((set) => ({
     try {
       const token = getAccessToken();
       console.log('[KYC Check] Token:', token ? `${token.substring(0, 20)}...` : 'MISSING');
-      console.log('[KYC Check] URL:', getGatewayUrl(KYC_CHECK_PATH));
-
       if (!token) {
         set({ error: 'No access token found', loading: false });
         return null;
       }
 
-      const response = await api.get(getGatewayUrl(KYC_CHECK_PATH), {
-        baseURL: '',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await api.get('check/kyc');
 
       console.log('[KYC Check API] Response Status:', response.status);
       console.log('[KYC Check API] Response Data:', response.data);

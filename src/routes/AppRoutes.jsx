@@ -2,6 +2,7 @@ import { Navigate, Route, Routes, useParams } from 'react-router-dom';
 import GeneralDetailsStep from '../pages/registration/GeneralDetailsStep';
 import RegistrationIntro from '../pages/registration/RegistrationIntro';
 import RegistrationSuccess from '../pages/registration/RegistrationSuccess';
+import RegisterSuccess from '../pages/registration/RegisterSuccess';
 import SetPinStep from '../pages/registration/SetPinStep';
 import PolicyPage from '../pages/registration/PolicyPage';
 import TermsPage from '../pages/registration/TermsPage';
@@ -80,6 +81,7 @@ export function AppRoutes() {
       <Route path="/security-questions" element={<SecurityQuestionsStep />} />
       <Route path="/confirm" element={<ConfirmRegistration />} />
       <Route path="/review" element={<ConfirmSubmitStep />} />
+      <Route path="/register-success" element={<RegisterSuccess />} />
       <Route path="/token-not-found" element={<TokenNotFound />} />
 
       {/* Protected Token-Required Routes */}

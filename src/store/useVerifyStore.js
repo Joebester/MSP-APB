@@ -36,9 +36,7 @@ export const useVerifyStore = create((set) => ({
       // interpolate with i18n properly instead of concatenating into the key
       toast.success(i18n.t('Sending OTP to') + ' ' + tel);
       const newTel = aesEncrypt(tel);
-      const response = await api.get(`otp/${newTel}`, {
-        headers: { langCode: localStorage.getItem('lang') || 'la' },
-      });
+      const response = await api.get(`public/otp/${newTel}`);
 
       if (response.status === 200 && response.data?.success === true) {
         toast.success(response.data?.message || 'OTP sent successfully');
@@ -68,9 +66,8 @@ export const useVerifyStore = create((set) => ({
       const bodyData = { timestamp, data: { username, otpCode } };
       const signature = aesEncrypt(JSON.stringify(bodyData));
 
-      const response = await api.post('/otp/verify', bodyData, {
+      const response = await api.post('public/otp/verify', bodyData, {
         headers: {
-          langCode: localStorage.getItem('lang') || 'la',
           'X-MSP-DATA-Signature': signature,
         },
       });
@@ -123,7 +120,7 @@ export const useVerifyStore = create((set) => ({
         lang: localStorage.getItem('lang') || 'la',
       };
       const emailBodyEncrypt = aesEncrypt(JSON.stringify(emailBody));
-      const response = await api.post('/email/request', emailBody, {
+      const response = await api.post('public/email/request', emailBody, {
         headers: { 'X-MSP-DATA-Signature': emailBodyEncrypt },
       });
 
@@ -163,7 +160,7 @@ export const useVerifyStore = create((set) => ({
       const otpEmailBody = { email, otp };
       const otpEmailBodyEncrypt = aesEncrypt(JSON.stringify(otpEmailBody));
 
-      const response = await api.post('/email/verify', otpEmailBody, {
+      const response = await api.post('public/email/verify', otpEmailBody, {
         headers: { 'X-MSP-DATA-Signature': otpEmailBodyEncrypt },
       });
 

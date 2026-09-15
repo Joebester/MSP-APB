@@ -8,6 +8,7 @@ import { useRegistration } from '../../context/RegistrationContext';
 import { useRegistrationStore } from '../../store/useRegistrationStore';
 import { Trans } from 'react-i18next';
 import { aesDecrypt } from '../../utils/crypto';
+import { getAccessToken } from '../../utils/auth';
 import { getLanguageFromUrl } from '../../utils/lang';
 
 export default function ConfirmSubmitStep() {
@@ -65,7 +66,14 @@ export default function ConfirmSubmitStep() {
     } else {
       const success = await confirmRegistration(u_id);
       if (success) {
-        navigate(`/kyc-check?langCode=${lang}`);
+        // Only continue into the token-protected KYC flow when confirming
+        // actually returned an access token; otherwise finish on the public
+        // registration success page.
+        navigate(
+          getAccessToken()
+            ? `/kyc-check?langCode=${lang}`
+            : `/register-success?langCode=${lang}`
+        );
       }
     }
   };

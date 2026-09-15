@@ -1,36 +1,37 @@
-// api.js
 import axios from 'axios';
 import { getAccessToken } from './auth';
 
+// Single MSP Register API base — matches the OpenAPI server url
+// `.../api/v1/msp/signup`. Every path is relative to it: `public/...` for the
+// open endpoints, `auth/...`, `check/...` and `address/...` for the rest.
 const api = axios.create({
   baseURL: import.meta.env.VITE_DEFUALT_API_URL,
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
-  }
+  },
 });
 
-// Request interceptor to automatically attach language and authorization header
 api.interceptors.request.use(
   (config) => {
-    const lang = localStorage.getItem('lang') === "la" ? 'LO': 'EN';
-    config.headers['langCode'] = lang;
+    // A langCode passed per request wins, so callers that need the raw
+    // lowercase code (address lookups) can opt out of the LO/EN mapping.
+    if (!config.headers.has('langCode')) {
+      config.headers['langCode'] = localStorage.getItem('lang') === 'la' ? 'LO' : 'EN';
+    }
+
     const token = getAccessToken();
-    if (token) {
+    if (token && !config.headers.has('Authorization')) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
+
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Response interceptor for generic error handling
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   (error) => {
     console.error('API Error:', error?.response?.data || error.message);
     return Promise.reject(error);

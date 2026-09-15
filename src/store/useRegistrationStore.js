@@ -1,8 +1,7 @@
 import { create } from 'zustand';
 import api from '../utils/API';
-import { getAccessToken, setAccessToken } from '../utils/auth';
+import { setAccessToken } from '../utils/auth';
 import { aesEncrypt, aesDecrypt } from '../utils/crypto';
-import { getGatewayUrl } from '../utils/gateway';
 import toast from 'react-hot-toast';
 
 export const useRegistrationStore = create((set) => ({
@@ -22,7 +21,7 @@ export const useRegistrationStore = create((set) => ({
       const bodyJson = JSON.stringify(bodyData);
       const signature = aesEncrypt(bodyJson);
 
-      const response = await api.post('/info', bodyData, {
+      const response = await api.post('public/info', bodyData, {
         headers: {
           'X-MSP-DATA-Signature': signature,
         },
@@ -59,7 +58,7 @@ export const useRegistrationStore = create((set) => ({
       const bodyJson = JSON.stringify(bodyData);
       const signature = aesEncrypt(bodyJson);
 
-      const response = await api.post('/confirm', bodyData, {
+      const response = await api.post('public/confirm', bodyData, {
         headers: {
           'X-MSP-DATA-Signature': signature,
         },
@@ -89,17 +88,16 @@ export const useRegistrationStore = create((set) => ({
 
   submitQuestions: async (answers) => {
     try {
-      const payload = answers.map((answer, index) => ({
-        questionId: index + 1,
-        answer: aesEncrypt(answer),
-      }));
+      const timestamp = new Date().toISOString().replace('T', ' ').split('.')[0];
+      const bodyData = {
+        timestamp,
+        data: answers.map((answer, index) => ({
+          questionId: index + 1,
+          answer: aesEncrypt(answer),
+        })),
+      };
 
-      const response = await api.put(getGatewayUrl('/api/v1/msp/question/newQuestion'), payload, {
-        baseURL: '',
-        headers: {
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
-      });
+      const response = await api.post('auth/question', bodyData);
 
       const code = response.data?.code;
       const ok = response.status === 200 && (code === '0000' || code === '00' || code === 200 || code === '200');
@@ -131,11 +129,9 @@ export const useRegistrationStore = create((set) => ({
       formData.append('docInfo', docInfo);
       formData.append('docFile', docFile);
 
-      const response = await api.post(getGatewayUrl('/api/v1/msp/signup/auth/doc/info'), formData, {
-        baseURL: '',
+      const response = await api.post('auth/doc/info', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${getAccessToken()}`,
         },
       });
 
@@ -157,12 +153,7 @@ export const useRegistrationStore = create((set) => ({
 
   submitKyc: async () => {
     try {
-      const response = await api.post(getGatewayUrl('/api/v1/msp/signup/auth/doc/submit'), {}, {
-        baseURL: '',
-        headers: {
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
-      });
+      const response = await api.post('auth/doc/submit', {});
 
       const code = response.data?.code;
       const ok = response.status === 200 && (code === '0000' || code === '00' || code === 200 || code === '200');
@@ -188,11 +179,9 @@ export const useRegistrationStore = create((set) => ({
       };
       const signature = aesEncrypt(JSON.stringify(bodyData));
 
-      const response = await api.post(getGatewayUrl('/api/v1/msp/signup/auth/mepom/verify'), bodyData, {
-        baseURL: '',
+      const response = await api.post('auth/mepom/verify', bodyData, {
         headers: {
           'X-MSP-DATA-Signature': signature,
-          Authorization: `Bearer ${getAccessToken()}`,
         },
       });
 
@@ -215,7 +204,7 @@ export const useRegistrationStore = create((set) => ({
   fetchCustomerInfo: async (tel) => {
     try {
       const encryptedTel = aesEncrypt(tel);
-      const response = await api.get(`/info/${encryptedTel}`);
+      const response = await api.get(`public/info/${encryptedTel}`);
 
       if (response.data?.code === 200 || response.data?.success === true || response.data?.success === 'true') {
         const raw = response.data?.data;
